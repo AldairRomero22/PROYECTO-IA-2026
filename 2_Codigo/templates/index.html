@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Competitividad Laboral</title>
+<style>
+:root{--bg:#f4f6f9;--card:#fff;--tx:#1e2b38;--mut:#5d6b7a;--bd:#dde3ea;--az:#2f5d8a;--na:#d9822b;--ve:#5b8466;--ro:#b4483a}
+@media (prefers-color-scheme:dark){:root{--bg:#10161d;--card:#1a232d;--tx:#e6ebf0;--mut:#9aa8b6;--bd:#2c3945;--az:#6ea3d6;--na:#e8a15c;--ve:#7fb08a;--ro:#e0786a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,Segoe UI,Roboto,sans-serif}
+header{background:var(--az);color:#fff;padding:22px 16px}
+header h1{margin:0;font-size:1.35rem}
+header p{margin:4px 0 0;opacity:.9;font-size:.95rem}
+main{max-width:1000px;margin:0 auto;padding:20px 16px 40px;display:grid;gap:20px;grid-template-columns:1fr}
+@media (min-width:860px){main{grid-template-columns:380px 1fr;align-items:start}}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:18px}
+h2{margin:0 0 12px;font-size:1.1rem}
+label{display:block;font-weight:600;font-size:.92rem;margin-top:12px}
+.fila{display:flex;align-items:center;gap:10px}
+input[type=range]{flex:1;accent-color:var(--az)}
+input[type=number]{width:76px;padding:6px 8px;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--tx);font:inherit}
+button{margin-top:18px;width:100%;padding:11px;border:0;border-radius:8px;background:var(--az);color:#fff;font:inherit;font-weight:600;cursor:pointer}
+button:hover{filter:brightness(1.1)}
+.err{background:#fdecea;color:#8a2a20;border:1px solid #f1b8b1;border-radius:8px;padding:10px 14px;margin-bottom:14px}
+.err li{margin-left:16px}
+.nivel{font-size:2rem;font-weight:700;margin:0}
+.Low{color:var(--na)}.Medium{color:var(--az)}.High{color:var(--ve)}
+.barra{display:grid;grid-template-columns:70px 1fr 56px;align-items:center;gap:8px;margin:6px 0;font-size:.9rem}
+.pista{height:12px;background:var(--bg);border-radius:6px;overflow:hidden;border:1px solid var(--bd)}
+.pista i{display:block;height:100%}
+.aviso{font-size:.88rem;color:var(--mut);margin-top:10px}
+.rec{border-left:4px solid var(--az);padding:6px 12px;margin:10px 0;background:var(--bg);border-radius:0 6px 6px 0}
+.rec b{display:block}
+.comp{display:grid;grid-template-columns:150px 1fr;gap:8px;align-items:center;margin:8px 0;font-size:.85rem}
+.pistas{position:relative;height:18px;background:var(--bg);border:1px solid var(--bd);border-radius:5px}
+.marca{position:absolute;top:-2px;width:3px;height:20px;border-radius:2px}
+.punto{position:absolute;top:2px;width:12px;height:12px;border-radius:50%;background:var(--tx);transform:translateX(-50%)}
+.leyenda{display:flex;flex-wrap:wrap;gap:14px;font-size:.82rem;color:var(--mut);margin-top:6px}
+.leyenda span::before{content:"";display:inline-block;width:10px;height:10px;margin-right:5px;border-radius:2px;background:var(--c)}
+.vacio{color:var(--mut)}
+footer{text-align:center;color:var(--mut);font-size:.82rem;padding:0 16px 24px}
+</style>
+</head>
+<body>
+<header>
+<h1>Competitividad laboral de estudiantes universitarios</h1>
+<p>Ingrese el perfil del estudiante para estimar su nivel de competitividad: baja, media o alta.</p>
+</header>
+<main>
+<section class="card">
+<h2>Perfil del estudiante</h2>
+<form method="post" action="/predecir">
+{% for v in variables %}
+{% set a, b = limites[v] %}
+{% set val = valores.get(v, 7.5 if v == 'GPA' else 5) %}
+<label for="n_{{ v }}">{{ etiquetas[v] }}</label>
+<div class="fila">
+<input type="range" min="{{ a }}" max="{{ b }}" step="{{ 0.1 if v == 'GPA' else 1 }}" value="{{ val }}" oninput="document.getElementById('n_{{ v }}').value=this.value" aria-label="{{ etiquetas[v] }}">
+<input type="number" id="n_{{ v }}" name="{{ v }}" min="{{ a }}" max="{{ b }}" step="{{ 0.1 if v == 'GPA' else 1 }}" value="{{ val }}" required>
+</div>
+{% endfor %}
+<button type="submit">Evaluar competitividad</button>
+</form>
+</section>
+<section>
+{% if errores %}
+<div class="err"><b>Revise los datos ingresados:</b><ul>{% for e in errores %}<li>{{ e }}</li>{% endfor %}</ul></div>
+{% endif %}
+{% if resultado %}
+<div class="card">
+<h2>Resultado</h2>
+<p class="nivel {{ resultado.clase }}">Competitividad {{ resultado.nivel }}</p>
+{% for c in ['Low','Medium','High'] %}
+{% set p = resultado.probabilidades[c] %}
+<div class="barra"><span>{{ {'Low':'Baja','Medium':'Media','High':'Alta'}[c] }}</span>
+<div class="pista"><i style="width:{{ (p*100)|round(1) }}%;background:var(--{{ {'Low':'na','Medium':'az','High':'ve'}[c] }})"></i></div>
+<span>{{ (p*100)|round(1) }} %</span></div>
+{% endfor %}
+<p class="aviso">
+{% if resultado.coincide %}La regresión logística, usada como segunda opinión, coincide con este resultado.
+{% else %}La regresión logística, usada como segunda opinión, estima nivel {{ {'Low':'bajo','Medium':'medio','High':'alto'}[resultado.segunda_opinion] }}: el perfil está cerca de un límite entre niveles y conviene interpretarlo con cautela.{% endif %}
+{% if resultado.fuera_de_rango %}<br>Atención: {{ resultado.fuera_de_rango|join(', ') }} están fuera del rango observado en los datos de entrenamiento.{% endif %}
+</p>
+</div>
+<div class="card" style="margin-top:20px">
+<h2>Recomendaciones para mejorar</h2>
+{% if resultado.recomendaciones %}
+{% for r in resultado.recomendaciones %}
+<div class="rec"><b>{{ r.variable }}: {{ r.actual }} → {{ r.objetivo }}</b>{{ r.consejo }}</div>
+{% endfor %}
+<p class="aviso">Las recomendaciones se ordenan según la distancia al perfil promedio de la clase Alta y el peso de cada variable en el modelo.</p>
+{% else %}
+<p class="vacio">El perfil iguala o supera el promedio de la clase Alta en todas las variables. Se recomienda mantener y consolidar estos resultados.</p>
+{% endif %}
+</div>
+<div class="card" style="margin-top:20px">
+<h2>Perfil comparado con cada nivel</h2>
+{% for f in resultado.comparacion %}
+{% set tope = 10 %}
+<div class="comp"><span>{{ f.variable }}</span>
+<div class="pistas">
+<i class="marca" style="left:{{ f.Low / tope * 100 }}%;background:var(--na)"></i>
+<i class="marca" style="left:{{ f.Medium / tope * 100 }}%;background:var(--az)"></i>
+<i class="marca" style="left:{{ f.High / tope * 100 }}%;background:var(--ve)"></i>
+<i class="punto" style="left:{{ f.estudiante / tope * 100 }}%"></i>
+</div></div>
+{% endfor %}
+<div class="leyenda"><span style="--c:var(--tx)">Estudiante</span><span style="--c:var(--na)">Promedio Baja</span><span style="--c:var(--az)">Promedio Media</span><span style="--c:var(--ve)">Promedio Alta</span></div>
+</div>
+{% else %}
+<div class="card vacio">
+<h2>Resultado</h2>
+Complete el perfil y presione «Evaluar competitividad». Aquí aparecerán el nivel estimado, las probabilidades, las recomendaciones y la comparación con cada nivel.
+</div>
+{% endif %}
+</section>
+</main>
+<footer>
+Modelo: red neuronal (32-16) con regresión logística como segunda opinión · F1-macro en prueba: {{ '%.2f'|format(metricas['Red neuronal (MLP)'].f1_macro) }}. Herramienta de orientación, no sustituye la evaluación profesional.
+</footer>
+</body>
+</html>
