@@ -1,4 +1,6 @@
 import copy
+import unicodedata
+
 import sklearn
 from pathlib import Path
 
@@ -28,12 +30,26 @@ ETIQUETAS = {'GPA': 'Promedio ponderado (GPA)',
              'Industry_Exposure': 'Exposición al entorno laboral'}
 LIMITES = {'GPA': (0.0, 10.0), 'Programming_Skill': (1, 10), 'Communication_Skill': (1, 10),
            'Teamwork': (1, 10), 'Internship_Count': (0, 10), 'Industry_Exposure': (0, 10)}
+CORTAS = {'GPA': 'Promedio', 'Programming_Skill': 'Programación', 'Communication_Skill': 'Comunicación',
+          'Teamwork': 'Equipo', 'Internship_Count': 'Prácticas', 'Industry_Exposure': 'Exposición'}
 CONSEJOS = {'GPA': 'Reforzar el rendimiento académico: tutorías, grupos de estudio y repaso de los cursos con menor nota.',
             'Programming_Skill': 'Practicar programación de forma constante con proyectos propios, retos en línea y cursos de especialización.',
             'Communication_Skill': 'Entrenar la comunicación oral y escrita: exposiciones, talleres de oratoria y redacción de informes.',
             'Teamwork': 'Participar en proyectos grupales, hackatones o voluntariados para fortalecer el trabajo colaborativo.',
             'Internship_Count': 'Buscar prácticas preprofesionales o pasantías, aunque sean de corta duración.',
             'Industry_Exposure': 'Acercarse al entorno laboral: charlas con empresas, ferias de empleo, visitas y mentorías con profesionales.'}
+
+
+def limpiar(texto):
+    return ''.join(c for c in unicodedata.normalize('NFD', str(texto).lower())
+                   if c.isalnum() and not unicodedata.combining(c))
+
+
+COLUMNAS = {'GPA': 'Promedio', 'Programming_Skill': 'Programación', 'Communication_Skill': 'Comunicación',
+            'Teamwork': 'Trabajo en equipo', 'Internship_Count': 'Prácticas', 'Industry_Exposure': 'Exposición laboral'}
+ALIAS = {limpiar(n): v for v in VARIABLES for n in (v, ETIQUETAS[v], CORTAS[v], COLUMNAS[v])}
+COLUMNAS_ID = ('estudiante', 'nombre', 'nombres', 'codigo', 'id', 'alumno')
+MAX_FILAS = 500
 
 
 def entrenar_red(a, y_a, b, y_b, semilla=42, paciencia=25, max_epocas=300):
@@ -138,12 +154,88 @@ def predecir(sistema, valores):
     fuera = [ETIQUETAS[v] for v in VARIABLES
              if not sistema['minimo'][v] <= valores[v] <= sistema['maximo'][v]]
     media = sistema['perfil_clases']
+    minimo, maximo = sistema['minimo'], sistema['maximo']
+
+    def norm(v, x):
+        return round(float(np.clip((x - minimo[v]) / (maximo[v] - minimo[v]), 0, 1)), 4)
+
+    comparacion = []
+    for v in VARIABLES:
+        fila_c = {'variable': ETIQUETAS[v], 'corta': CORTAS[v], 'estudiante': valores[v],
+                  'n_estudiante': norm(v, valores[v])}
+        for c in CLASES:
+            fila_c[c] = round(float(media.loc[c, v]), 2)
+            fila_c['n_' + c] = norm(v, media.loc[c, v])
+        comparacion.append(fila_c)
     return {'clase': clase, 'nivel': NIVELES[clase],
             'probabilidades': {c: round(float(p), 4) for c, p in zip(CLASES, prob)},
             'segunda_opinion': segunda, 'coincide': segunda == clase,
             'recomendaciones': recomendar(sistema, valores, clase),
-            'comparacion': [{'variable': ETIQUETAS[v], 'estudiante': valores[v],
-                             'Low': round(float(media.loc['Low', v]), 2),
-                             'Medium': round(float(media.loc['Medium', v]), 2),
-                             'High': round(float(media.loc['High', v]), 2)} for v in VARIABLES],
-            'fuera_de_rango': fuera}
+            'comparacion': comparacion, 'fuera_de_rango': fuera}
+
+
+def leer_tabla(archivo, nombre):
+    if nombre.lower().endswith('.csv'):
+        tabla = pd.read_csv(archivo, sep=None, engine='python', encoding='utf-8-sig')
+    elif nombre.lower().endswith(('.xlsx', '.xls')):
+        tabla = pd.read_excel(archivo)
+    else:
+        raise ValueError('Formato no admitido. Suba un archivo .xlsx o .csv.')
+    columnas = {}
+    for c in tabla.columns:
+        v = ALIAS.get(limpiar(c))
+        if v and v not in columnas.values():
+            columnas[c] = v
+    faltan = [ETIQUETAS[v] for v in VARIABLES if v not in columnas.values()]
+    if faltan:
+        raise ValueError('Faltan columnas: ' + ', '.join(faltan) + '.')
+    if len(tabla) == 0:
+        raise ValueError('El archivo no tiene filas con datos.')
+    if len(tabla) > MAX_FILAS:
+        raise ValueError(f'El archivo supera el máximo de {MAX_FILAS} estudiantes.')
+    return tabla, columnas
+
+
+def evaluar_tabla(sistema, tabla, columnas):
+    id_col = next((c for c in tabla.columns if limpiar(c) in COLUMNAS_ID), None)
+    filas = []
+    for i, (_, fila) in enumerate(tabla.iterrows(), 1):
+        valores, errores = validar({v: fila[c] for c, v in columnas.items()})
+        nombre = str(fila[id_col]) if id_col is not None and pd.notna(fila[id_col]) else f'Estudiante {i}'
+        registro = {'estudiante': nombre, 'errores': errores, 'valores': valores}
+        if not errores:
+            r = predecir(sistema, valores)
+            registro.update({'clase': r['clase'], 'nivel': r['nivel'],
+                             'prob_alta': r['probabilidades']['High'],
+                             'prioridad': r['recomendaciones'][0]['variable'] if r['recomendaciones'] else '',
+                             'segunda_opinion': r['segunda_opinion'], 'coincide': r['coincide']})
+        filas.append(registro)
+    return filas
+
+
+def resumen(sistema, ruta_csv=CSV):
+    df = pd.read_csv(ruta_csv)
+    conteo = df['Employment_Class'].value_counts()
+    peso = sistema['regresion'].coef_[2]
+    orden = [VARIABLES[i] for i in np.argsort(peso)[::-1]]
+    estad = []
+    for v in VARIABLES:
+        fila = {'variable': v, 'etiqueta': ETIQUETAS[v], 'corta': CORTAS[v],
+                'minimo': round(float(df[v].min()), 2), 'media': round(float(df[v].mean()), 2),
+                'maximo': round(float(df[v].max()), 2)}
+        for c in CLASES:
+            fila[c] = round(float(sistema['perfil_clases'].loc[c, v]), 2)
+        estad.append(fila)
+    return {'total': len(df), 'distribucion': {c: int(conteo.get(c, 0)) for c in CLASES},
+            'medias': {v: round(float(df[v].mean()), 2) for v in VARIABLES},
+            'estadisticas': estad, 'clave': [CORTAS[v] for v in orden[:2]],
+            'muestra': df[['Student_No'] + VARIABLES + ['Employment_Class']].head(8).to_dict('records')}
+
+
+def plantilla():
+    ejemplo = pd.DataFrame([
+        ['Estudiante 1', 7.2, 4, 5, 6, 1, 3],
+        ['Estudiante 2', 9.1, 8, 8, 7, 3, 8],
+        ['Estudiante 3', 6.4, 2, 3, 3, 0, 1]],
+        columns=['Estudiante'] + [COLUMNAS[v] for v in VARIABLES])
+    return ejemplo

@@ -1,3 +1,4 @@
+import io
 import sys
 import time
 from pathlib import Path
@@ -24,7 +25,7 @@ def cliente():
 def test_pagina_inicial(cliente):
     r = cliente.get('/')
     assert r.status_code == 200
-    assert 'Perfil del estudiante' in r.get_data(as_text=True)
+    assert 'Analiza el potencial de un estudiante' in r.get_data(as_text=True)
 
 
 def test_salud(cliente):
@@ -120,3 +121,71 @@ def test_recuperacion_si_el_archivo_esta_danado(tmp_path):
     ruta = tmp_path / 'danado.joblib'
     ruta.write_bytes(b'no es un modelo')
     assert sistema.cargar(ruta)['registros'] == 2000
+
+
+def subir(cliente, contenido, nombre):
+    return cliente.post('/cargar', data={'archivo': (io.BytesIO(contenido), nombre)},
+                        content_type='multipart/form-data')
+
+
+def test_descarga_de_plantilla(cliente):
+    r = cliente.get('/plantilla.xlsx')
+    assert r.status_code == 200
+    assert r.data[:2] == b'PK'
+
+
+def test_carga_de_la_plantilla_en_excel(cliente):
+    plantilla = cliente.get('/plantilla.xlsx').data
+    r = subir(cliente, plantilla, 'plantilla.xlsx')
+    html = r.get_data(as_text=True)
+    assert r.status_code == 200
+    assert 'Estudiante 2' in html
+    assert 'Con errores: <b>0</b>' in html
+
+
+def test_carga_de_csv_con_columnas_en_espanol(cliente):
+    csv = ('Nombre;Promedio;Programación;Comunicación;Trabajo en equipo;Prácticas;Exposición\n'
+           'Ana;7,5;5;5;5;2;5\n').encode('utf-8')
+    r = subir(cliente, csv, 'notas.csv')
+    assert r.status_code == 200
+    assert 'Ana' in r.get_data(as_text=True)
+
+
+def test_carga_marca_las_filas_con_datos_invalidos(cliente):
+    csv = ('Estudiante,GPA,Programming_Skill,Communication_Skill,Teamwork,Internship_Count,Industry_Exposure\n'
+           'Ana,7.5,5,5,5,2,5\nLuis,15,5,5,5,2,5\n').encode('utf-8')
+    html = subir(cliente, csv, 'notas.csv').get_data(as_text=True)
+    assert 'Con errores: <b>1</b>' in html
+
+
+def test_carga_rechaza_archivo_sin_columnas_requeridas(cliente):
+    r = subir(cliente, b'a,b\n1,2\n', 'malo.csv')
+    assert r.status_code == 400
+    assert 'Faltan columnas' in r.get_data(as_text=True)
+
+
+def test_carga_rechaza_formato_no_admitido(cliente):
+    r = subir(cliente, b'texto', 'notas.txt')
+    assert r.status_code == 400
+    assert 'Formato no admitido' in r.get_data(as_text=True)
+
+
+def test_carga_sin_archivo(cliente):
+    r = cliente.post('/cargar', data={}, content_type='multipart/form-data')
+    assert r.status_code == 400
+
+
+def test_archivo_de_un_alumno_muestra_resultado_completo(cliente):
+    csv = 'Estudiante,GPA,Programming_Skill,Communication_Skill,Teamwork,Internship_Count,Industry_Exposure\nAna,9.2,8,8,8,3,8\n'
+    html = subir(cliente, csv.encode(), 'alumno.csv').get_data(as_text=True)
+    assert 'Competitividad Alta' in html
+    assert 'Recomendaciones para mejorar' in html
+    assert 'Ana' in html
+
+
+def test_subir_archivo_desde_evaluar_estudiante(cliente):
+    csv = 'GPA,Programming_Skill,Communication_Skill,Teamwork,Internship_Count,Industry_Exposure\n15,8,8,8,3,8\n'
+    r = cliente.post('/cargar', data={'archivo': (io.BytesIO(csv.encode()), 'alumno.csv'), 'desde': 'evaluar'},
+                     content_type='multipart/form-data')
+    assert r.status_code == 400
+    assert 'el valor debe estar entre' in r.get_data(as_text=True)

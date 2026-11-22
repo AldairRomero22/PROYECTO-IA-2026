@@ -1,10 +1,10 @@
-# Sistema inteligente para la evaluación y predicción de la competitividad laboral de estudiantes universitarios
+# Emplea360 · Sistema inteligente para la evaluación y predicción de la competitividad laboral de estudiantes universitarios
 
 Curso ISIA-108 Inteligencia Artificial · Universidad Privada Antenor Orrego (UPAO), Trujillo.
 
 **Integrantes:** Aguirre Anampa Jayro Paul · Romero Asmat Bryans Aldair · Rujel Álvarez Kevin David · Salvatierra Prieto Gabriel del Piero
 
-El sistema recibe el perfil de un estudiante (GPA, programación, comunicación, trabajo en equipo, prácticas y exposición laboral) y estima su nivel de competitividad laboral (baja, media o alta) con una red neuronal, usando una regresión logística como segunda opinión. Además genera recomendaciones de mejora y compara el perfil con el promedio de cada nivel.
+El sistema recibe el perfil de un estudiante (GPA, programación, comunicación, trabajo en equipo, prácticas y exposición laboral) y estima su nivel de competitividad laboral (baja, media o alta) con una red neuronal, usando una regresión logística como segunda opinión. Además genera recomendaciones de mejora, compara el perfil con el promedio de cada nivel y permite cargar un Excel o CSV con varios estudiantes para evaluarlos de una vez.
 
 ## Contenido del repositorio
 
