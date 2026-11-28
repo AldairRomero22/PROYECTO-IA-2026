@@ -22,8 +22,14 @@ def cliente():
     return aplicacion.app.test_client()
 
 
-def test_pagina_inicial(cliente):
+def test_landing(cliente):
     r = cliente.get('/')
+    assert r.status_code == 200
+    assert 'href="/sistema"' in r.get_data(as_text=True)
+
+
+def test_pagina_inicial(cliente):
+    r = cliente.get('/sistema')
     assert r.status_code == 200
     assert 'Analiza el potencial de un estudiante' in r.get_data(as_text=True)
 

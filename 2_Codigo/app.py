@@ -25,6 +25,11 @@ def contexto(**extra):
 
 @app.get('/')
 def inicio():
+    return render_template('landing.html', datos=DATOS)
+
+
+@app.get('/sistema')
+def sistema_web():
     return render_template('index.html', **contexto())
 
 
