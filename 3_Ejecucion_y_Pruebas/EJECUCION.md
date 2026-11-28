@@ -28,3 +28,5 @@ Devuelve la clase estimada, las probabilidades, la segunda opinión, las recomen
 
 ## Pruebas incluidas
 Página inicial, estado del servicio, descarga de plantilla, carga de Excel y CSV (archivo de un solo alumno, columnas en inglés y español, filas con datos inválidos, columnas faltantes, formato no admitido), predicción de perfiles alto y bajo, probabilidades que suman 1, recomendaciones, rechazo de datos inválidos o faltantes, formulario web, tiempo de respuesta menor a 5 s (RNF-02), F1-macro mínimo de 0.70 (RNF-03), guardado y carga del sistema y recuperación ante un archivo dañado.
+
+El módulo *Resultados* incluye además un Coach de carrera con IA que genera un plan de 4 semanas con Claude. Solo aparece si el servidor tiene la variable de entorno ANTHROPIC_API_KEY (en Render, en Environment; en local, por ejemplo `set ANTHROPIC_API_KEY=...` antes de `python app.py`). Opcionalmente se puede cambiar el modelo con ANTHROPIC_MODEL (por defecto claude-haiku-5-5) y el tope diario de planes con COACH_LIMITE_DIARIO (por defecto 150). Cada visitante puede generar hasta 5 planes por hora. Sin la clave, el sistema funciona igual y el coach no se muestra.

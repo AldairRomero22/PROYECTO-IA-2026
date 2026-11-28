@@ -147,6 +147,15 @@ svg text{fill:var(--tx);font-family:Poppins,system-ui,sans-serif}
 .exp-fila b{text-align:right}
 .exp-fila b.mas{color:#86efac}
 .exp-fila b.menos{color:#fca5a5}
+.coach .sub{color:#c9d3db}
+.coach .boton{margin-top:6px}
+.coach-resumen{margin:16px 0 0;font-size:.95rem;line-height:1.6;color:#fff}
+.coach #coach-cierre{margin-top:14px}
+.coach-semanas{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:14px}
+.coach-sem{padding:16px;background:rgba(6,10,16,.62);border-color:rgba(255,255,255,.16)}
+.coach-sem h4{margin:0 0 8px;font-size:.95rem}
+.coach-sem ul{margin:0;padding-left:18px;font-size:.86rem;line-height:1.6;color:#eef3f7}
+@media (max-width:760px){.coach-semanas{grid-template-columns:1fr}}
 .sim-campos{display:flex;flex-direction:column;gap:10px;margin:14px 0}
 .sim-f{display:grid;grid-template-columns:110px 1fr 38px;align-items:center;gap:12px;font-size:.84rem}
 .sim-f input{width:100%;padding:0;border:0;background:transparent;accent-color:#9fdcff;cursor:pointer}
@@ -552,6 +561,19 @@ html.vidrio .hero>svg [fill="#2f3a8f"]{fill:#2b3d4c}
 <p class="nota">El perfil iguala o supera el promedio de la clase Alta en todas las variables. Se recomienda mantener y consolidar estos resultados.</p>
 {% endif %}
 </div>
+{% if coach_activo %}
+<div class="card coach">
+<h3>Coach de carrera con IA</h3>
+<p class="sub">Un plan de 4 semanas pensado para tu perfil y tu carrera, generado con Claude. Es orientación y no garantiza resultados.</p>
+<button type="button" class="boton" id="coach-btn"><svg class="ic"><use href="#i-wand"/></svg>Generar mi plan</button>
+<p class="nota" id="coach-msg" hidden></p>
+<div id="coach-res" hidden>
+<p class="coach-resumen" id="coach-resumen"></p>
+<div class="coach-semanas" id="coach-semanas"></div>
+<p class="nota" id="coach-cierre"></p>
+</div>
+</div>
+{% endif %}
 {% else %}
 <div class="card vacio">
 <svg class="ic"><use href="#i-chart"/></svg>
@@ -889,6 +911,39 @@ if (RES) {
     pintar(RES);
   };
   pintar(RES);
+}
+if (RES && document.getElementById('coach-btn')) {
+  const btn = document.getElementById('coach-btn'), msg = document.getElementById('coach-msg');
+  const caja = document.getElementById('coach-res'), semanas = document.getElementById('coach-semanas');
+  const pintar = d => {
+    document.getElementById('coach-resumen').textContent = d.resumen;
+    document.getElementById('coach-cierre').textContent = d.cierre;
+    semanas.innerHTML = '';
+    d.semanas.forEach((s, i) => {
+      const tarjeta = document.createElement('div'), titulo = document.createElement('h4'), lista = document.createElement('ul');
+      tarjeta.className = 'card coach-sem';
+      titulo.textContent = `Semana ${i + 1} · ${s.foco}`;
+      s.acciones.forEach(a => { const li = document.createElement('li'); li.textContent = a; lista.appendChild(li); });
+      tarjeta.append(titulo, lista);
+      semanas.appendChild(tarjeta);
+    });
+    msg.hidden = true;
+    caja.hidden = false;
+  };
+  btn.onclick = () => {
+    btn.disabled = true;
+    msg.hidden = false;
+    msg.textContent = 'Generando tu plan...';
+    fetch('/api/coach', {method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({...VALORES, carrera: RES.ofertas.carrera})})
+      .then(r => r.json().then(d => ({ok: r.ok, d})))
+      .then(({ok, d}) => {
+        if (!ok) throw new Error(d.error || (d.errores || []).join(' ') || 'No se pudo generar el plan.');
+        pintar(d);
+      })
+      .catch(e => { msg.hidden = false; msg.textContent = e.message; })
+      .finally(() => { btn.disabled = false; });
+  };
 }
 dashboard();
 tablaHistorial();

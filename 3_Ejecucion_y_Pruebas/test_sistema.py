@@ -8,6 +8,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / '2_Codigo'))
 
 import app as aplicacion
+import coach
 import sistema
 
 PERFIL_ALTO = {'GPA': 9.4, 'Programming_Skill': 9, 'Communication_Skill': 8,
@@ -254,3 +255,56 @@ def test_resultado_explica_la_prediccion(cliente):
     assert len(a) == 6
     assert sum(f['aporte'] for f in a) > 0 > sum(f['aporte'] for f in b)
     assert '¿Por qué este resultado?' in cliente.post('/predecir', data=alto).get_data(as_text=True)
+
+
+PLAN = ('{"resumen": "Buen perfil.", "semanas": [{"foco": "Comunicación", "acciones": ["Practicar una exposición", "Grabar un video"]},'
+        ' {"foco": "Prácticas", "acciones": ["Buscar vacantes"]}, {"foco": "Proyectos", "acciones": ["Publicar un repositorio"]},'
+        ' {"foco": "Entrevistas", "acciones": ["Simular una entrevista"]}], "cierre": "Tú puedes."}')
+
+
+@pytest.fixture
+def coach_simulado(monkeypatch):
+    monkeypatch.setenv('ANTHROPIC_API_KEY', 'clave-de-prueba')
+    monkeypatch.setattr(coach, 'llamar', lambda texto: 'Aquí tienes: ' + PLAN)
+    monkeypatch.setattr(coach, '_por_ip', coach.defaultdict(coach.deque))
+    monkeypatch.setitem(coach._dia, 'usos', 0)
+    return monkeypatch
+
+
+def test_coach_no_disponible_sin_clave(cliente, monkeypatch):
+    monkeypatch.delenv('ANTHROPIC_API_KEY', raising=False)
+    assert cliente.post('/api/coach', json=PERFIL_BAJO).status_code == 503
+    assert 'Coach de carrera con IA' not in cliente.post('/predecir', data=PERFIL_BAJO).get_data(as_text=True)
+
+
+def test_coach_genera_plan(cliente, coach_simulado):
+    html = cliente.post('/predecir', data=PERFIL_BAJO).get_data(as_text=True)
+    assert 'Coach de carrera con IA' in html
+    r = cliente.post('/api/coach', json={**PERFIL_BAJO, 'carrera': 'Derecho'})
+    datos = r.get_json()
+    assert r.status_code == 200
+    assert len(datos['semanas']) == 4
+    assert datos['cierre'] == 'Tú puedes.'
+
+
+def test_coach_incluye_carrera_y_nivel_en_el_prompt(cliente, coach_simulado):
+    enviado = []
+    coach_simulado.setattr(coach, 'llamar', lambda texto: enviado.append(texto) or PLAN)
+    cliente.post('/api/coach', json={**PERFIL_BAJO, 'carrera': 'Derecho'})
+    assert 'Carrera: Derecho' in enviado[0]
+    assert 'Nivel de competitividad laboral: Baja' in enviado[0]
+
+
+def test_coach_valida_los_datos(cliente, coach_simulado):
+    assert cliente.post('/api/coach', json={'GPA': 50}).status_code == 400
+
+
+def test_coach_limita_los_usos_por_ip(cliente, coach_simulado):
+    codigos = [cliente.post('/api/coach', json=PERFIL_ALTO).status_code for _ in range(coach.LIMITE_POR_IP + 1)]
+    assert codigos[-1] == 429
+    assert codigos[:-1] == [200] * coach.LIMITE_POR_IP
+
+
+def test_coach_responde_error_si_la_respuesta_no_es_valida(cliente, coach_simulado):
+    coach_simulado.setattr(coach, 'llamar', lambda texto: 'no es json')
+    assert cliente.post('/api/coach', json=PERFIL_ALTO).status_code == 502

@@ -4,6 +4,7 @@ import uuid
 
 from flask import Flask, jsonify, render_template, request, send_file
 
+import coach
 import sistema
 
 app = Flask(__name__)
@@ -15,7 +16,7 @@ def contexto(**extra):
     base = {'variables': sistema.VARIABLES, 'etiquetas': sistema.ETIQUETAS,
             'limites': sistema.LIMITES, 'valores': {}, 'errores': [], 'resultado': None,
             'error_lote': None, 'nombre_archivo': '', 'alumno': '', 'origen': 'Individual',
-            'metricas': MODELO['metricas'], 'datos': DATOS, 'carreras': list(sistema.CARRERAS),
+            'metricas': MODELO['metricas'], 'datos': DATOS, 'carreras': list(sistema.CARRERAS), 'coach_activo': coach.disponible(),
             'info': {'epoca': MODELO['epoca'], 'registros': MODELO['registros']}}
     base.update(extra)
     if base['resultado']:
@@ -54,6 +55,24 @@ def predecir_api():
 
 def rechazo(mensaje):
     return render_template('index.html', **contexto(error_lote=mensaje)), 400
+
+
+@app.post('/api/coach')
+def coach_api():
+    if not coach.disponible():
+        return jsonify({'error': 'El coach con IA no está configurado.'}), 503
+    datos = request.get_json(silent=True) or {}
+    valores, errores = sistema.validar(datos)
+    if errores:
+        return jsonify({'errores': errores}), 400
+    ip = (request.headers.get('X-Forwarded-For') or request.remote_addr or '').split(',')[0].strip()
+    if not coach.permitir(ip):
+        return jsonify({'error': 'Alcanzaste el límite de planes por ahora. Inténtalo más tarde.'}), 429
+    resultado = sistema.predecir(MODELO, valores, datos.get('carrera', ''))
+    try:
+        return jsonify(coach.generar(resultado, resultado['ofertas']['carrera']))
+    except Exception:
+        return jsonify({'error': 'No se pudo generar el plan. Inténtalo de nuevo.'}), 502
 
 
 @app.post('/cargar')
