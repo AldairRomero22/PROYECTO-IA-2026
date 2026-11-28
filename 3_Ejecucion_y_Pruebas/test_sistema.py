@@ -242,3 +242,15 @@ def test_recomendaciones_se_adaptan_a_la_carrera(cliente):
     assert 'Habilidad de programación' not in marketing
     assert 'redacción publicitaria' in marketing
     assert 'Habilidad de programación' in sistemas
+
+
+def test_resultado_explica_la_prediccion(cliente):
+    alto = {'GPA': 9.5, 'Programming_Skill': 9, 'Communication_Skill': 9, 'Teamwork': 9,
+            'Internship_Count': 4, 'Industry_Exposure': 9}
+    bajo = {'GPA': 5, 'Programming_Skill': 1, 'Communication_Skill': 1, 'Teamwork': 1,
+            'Internship_Count': 0, 'Industry_Exposure': 0}
+    a = cliente.post('/api/predecir', json=alto).get_json()['explicacion']
+    b = cliente.post('/api/predecir', json=bajo).get_json()['explicacion']
+    assert len(a) == 6
+    assert sum(f['aporte'] for f in a) > 0 > sum(f['aporte'] for f in b)
+    assert '¿Por qué este resultado?' in cliente.post('/predecir', data=alto).get_data(as_text=True)

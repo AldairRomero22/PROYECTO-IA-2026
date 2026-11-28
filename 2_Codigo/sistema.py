@@ -323,6 +323,14 @@ def ofertas(comparacion, clase, carrera=''):
     return {'carrera': elegida, 'indicada': indicada, 'empresas': tarjetas}
 
 
+def explicar(sistema, z):
+    aportes = sistema['regresion'].coef_[2] * z
+    tope = float(np.abs(aportes).max()) or 1.0
+    filas = [{'variable': CORTAS[v], 'aporte': round(float(a), 2), 'ancho': round(abs(float(a)) / tope * 100)}
+             for v, a in zip(VARIABLES, aportes)]
+    return sorted(filas, key=lambda f: -f['aporte'])
+
+
 def predecir(sistema, valores, carrera=''):
     fila = pd.DataFrame([[valores[v] for v in VARIABLES]], columns=VARIABLES)
     z = sistema['escalador'].transform(fila)
@@ -350,7 +358,8 @@ def predecir(sistema, valores, carrera=''):
             'segunda_opinion': segunda, 'coincide': segunda == clase,
             'recomendaciones': recomendar(sistema, valores, clase, resolver_carrera(comparacion, carrera)[0]),
             'comparacion': comparacion, 'fuera_de_rango': fuera,
-            'ofertas': ofertas(comparacion, clase, carrera)}
+            'ofertas': ofertas(comparacion, clase, carrera),
+            'explicacion': explicar(sistema, z[0])}
 
 
 def leer_tabla(archivo, nombre):
