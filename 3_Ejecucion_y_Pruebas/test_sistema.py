@@ -219,3 +219,11 @@ def test_archivo_con_columna_carrera(cliente):
            'Ana,8,5,5,5,2,5,Psicología\n')
     html = subir(cliente, csv.encode(), 'ana.csv').get_data(as_text=True)
     assert '<span>Carrera</span><b>Psicología</b>' in html
+
+
+def test_resultado_incluye_simulador(cliente):
+    r = cliente.post('/predecir', data={'GPA': 7, 'Programming_Skill': 5, 'Communication_Skill': 5,
+                                        'Teamwork': 5, 'Internship_Count': 1, 'Industry_Exposure': 4})
+    html = r.get_data(as_text=True)
+    assert 'Simulador: ¿y si mejoro?' in html
+    assert html.count('type="range"') == 6

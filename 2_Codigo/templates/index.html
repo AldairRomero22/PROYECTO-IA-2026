@@ -125,6 +125,12 @@ svg text{fill:var(--tx);font-family:Poppins,system-ui,sans-serif}
 .carrera-det .ic{width:18px;height:18px;color:#9fdcff}
 .carrera-det span{color:var(--mut)}
 @media (max-width:560px){.empresa{grid-template-columns:48px 1fr}.emp-logo{width:48px;height:48px}.empresa .boton{grid-column:1/-1;justify-self:stretch;justify-content:center}}
+.sim-campos{display:flex;flex-direction:column;gap:10px;margin:14px 0}
+.sim-f{display:grid;grid-template-columns:110px 1fr 38px;align-items:center;gap:12px;font-size:.84rem}
+.sim-f input{width:100%;padding:0;border:0;background:transparent;accent-color:#9fdcff;cursor:pointer}
+.sim-f output{text-align:right;font-weight:600}
+.sim-res{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.sim-res .sello{align-self:flex-start;margin-bottom:6px}
 .carrera-campo{margin-top:16px}
 .carrera-campo select{max-width:420px}
 .rec{padding:18px}
@@ -462,6 +468,7 @@ html.vidrio .hero>svg [fill="#2f3a8f"]{fill:#2b3d4c}
 </div>
 </div>
 </div>
+<div class="col">
 <div class="card">
 <h3>Perfil comparado con cada nivel</h3>
 <p class="sub">Valores normalizados respecto al rango del conjunto de datos</p>
@@ -474,6 +481,22 @@ html.vidrio .hero>svg [fill="#2f3a8f"]{fill:#2b3d4c}
 </table></div>
 <div class="leyenda"><span style="--c:#8aa0ff">Estudiante</span><span style="--c:var(--ro)">Baja</span><span style="--c:var(--am)">Media</span><span style="--c:var(--ve)">Alta</span></div>
 </div>
+</div>
+</div>
+<div class="card sim">
+<h3>Simulador: ¿y si mejoro?</h3>
+<p class="sub">Mueve los controles para ver cómo cambiaría el resultado. No modifica la evaluación guardada.</p>
+<div class="sim-campos">
+{% for v in variables %}{% set a, b = limites[v] %}
+<label class="sim-f"><span>{{ campos[v][0] }}</span><input type="range" data-v="{{ v }}" min="{{ a }}" max="{{ b }}" step="{{ 0.1 if v == 'GPA' else 1 }}" value="{{ valores[v] }}"><output>{{ valores[v] }}</output></label>
+{% endfor %}
+</div>
+<div class="sim-res">
+<span class="sello" id="sim-sello"></span>
+<div id="sim-barras"></div>
+<p class="nota" id="sim-delta"></p>
+</div>
+<button type="button" class="boton sec" id="sim-reset"><svg class="ic"><use href="#i-reset"/></svg>Restablecer</button>
 </div>
 </div>
 </div>
@@ -770,6 +793,43 @@ if (RES) {
   serie('n_Medium', COLOR.Medium, false, 1.5, '4 3');
   serie('n_High', COLOR.High, false, 1.5, '4 3');
   serie('n_estudiante', '#8aa0ff', true, 2.5);
+}
+if (RES) {
+  const sim = document.querySelector('.sim');
+  const rangos = [...sim.querySelectorAll('input[type=range]')];
+  const base = RES.probabilidades.High;
+  const color = {High: '--ve', Medium: '--am', Low: '--ro'};
+  const fmt = v => Number.isInteger(+v) ? v : (+v).toFixed(1);
+  let espera = null;
+  const pintar = r => {
+    const sello = document.getElementById('sim-sello');
+    sello.className = 'sello ' + r.clase;
+    sello.textContent = 'Competitividad ' + r.nivel;
+    document.getElementById('sim-barras').innerHTML = ['High', 'Medium', 'Low'].map(c => {
+      const p = (r.probabilidades[c] * 100).toFixed(1);
+      return `<div class="barra" style="--c:var(${color[c]})"><div><span>${NIVEL[c]}</span><b>${p} %</b></div><span><i style="width:${p}%"></i></span></div>`;
+    }).join('');
+    const d = (r.probabilidades.High - base) * 100;
+    document.getElementById('sim-delta').textContent = Math.abs(d) < 0.05
+      ? 'Igual que la evaluación actual.'
+      : `Probabilidad de Alta: ${d > 0 ? '+' : ''}${d.toFixed(1)} puntos respecto a la evaluación actual.`;
+  };
+  const consultar = () => {
+    const datos = {};
+    rangos.forEach(r => datos[r.dataset.v] = r.value);
+    fetch('/api/predecir', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(datos)})
+      .then(x => x.json()).then(pintar).catch(() => {});
+  };
+  rangos.forEach(r => r.oninput = () => {
+    r.nextElementSibling.textContent = fmt(r.value);
+    clearTimeout(espera);
+    espera = setTimeout(consultar, 120);
+  });
+  document.getElementById('sim-reset').onclick = () => {
+    rangos.forEach(r => { r.value = r.defaultValue; r.nextElementSibling.textContent = fmt(r.value); });
+    pintar(RES);
+  };
+  pintar(RES);
 }
 dashboard();
 tablaHistorial();
