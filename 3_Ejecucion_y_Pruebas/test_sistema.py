@@ -227,3 +227,18 @@ def test_resultado_incluye_simulador(cliente):
     html = r.get_data(as_text=True)
     assert 'Simulador: ¿y si mejoro?' in html
     assert html.count('type="range"') == 6
+
+
+def recomendaciones(cliente, carrera):
+    datos = {'GPA': 7, 'Programming_Skill': 2, 'Communication_Skill': 5, 'Teamwork': 5,
+             'Internship_Count': 1, 'Industry_Exposure': 3, 'carrera': carrera}
+    html = cliente.post('/predecir', data=datos).get_data(as_text=True)
+    return html[html.index('Recomendaciones para mejorar'):]
+
+
+def test_recomendaciones_se_adaptan_a_la_carrera(cliente):
+    marketing = recomendaciones(cliente, 'Marketing y Comunicación')
+    sistemas = recomendaciones(cliente, 'Ingeniería de Sistemas e IA')
+    assert 'Habilidad de programación' not in marketing
+    assert 'redacción publicitaria' in marketing
+    assert 'Habilidad de programación' in sistemas

@@ -112,6 +112,66 @@ CARRERAS = {
                      ('Sanna Clínicas', 'sanna.pe', None, 'Red de clínicas'),
                      ('EsSalud', 'essalud.gob.pe', None, 'Seguridad social de salud'),
                      ('MINSA', 'gob.pe', 'https://talentoperu.servir.gob.pe', 'Entidad pública de salud')]}}
+ENFOQUE = {
+    'Ingeniería de Sistemas e IA': ({}, {
+        'Communication_Skill': 'Practicar cómo explicar ideas técnicas a personas no técnicas: documentación, demos y presentaciones.',
+        'Teamwork': 'Trabajar en proyectos en equipo con Git y metodologías ágiles, o participar en hackatones.',
+        'Industry_Exposure': 'Acercarse al sector tecnológico: meetups, hackatones, charlas con empresas y mentorías con desarrolladores.',
+        'Internship_Count': 'Buscar prácticas en desarrollo de software, datos o infraestructura TI.'}),
+    'Administración y Negocios': ({'Programming_Skill': 0.4}, {
+        'Programming_Skill': 'Dominar herramientas digitales de gestión: Excel avanzado, Power BI y manejo de datos para decidir mejor.',
+        'Communication_Skill': 'Fortalecer la comunicación con clientes y equipos: presentaciones, negociación e informes ejecutivos.',
+        'Industry_Exposure': 'Acercarse a empresas: ferias de empleo, visitas a áreas comerciales y mentorías con jefes de área.',
+        'Internship_Count': 'Buscar prácticas en áreas comerciales, de operaciones o administrativas.'}),
+    'Contabilidad y Finanzas': ({'Programming_Skill': 0.4, 'GPA': 1.2}, {
+        'GPA': 'Reforzar contabilidad financiera, costos y tributación: repasar los cursos con menor nota y practicar con casos reales.',
+        'Programming_Skill': 'Manejar herramientas de análisis: Excel avanzado, Power BI y sistemas contables o ERP.',
+        'Communication_Skill': 'Practicar la presentación clara de informes y estados financieros a personas que no son contadoras.',
+        'Industry_Exposure': 'Acercarse a estudios contables, áreas financieras y bancos: ferias, charlas y mentorías con contadores.',
+        'Internship_Count': 'Buscar prácticas contables, de tesorería o de auditoría.'}),
+    'Marketing y Comunicación': ({'Programming_Skill': 0.3, 'Communication_Skill': 1.3}, {
+        'Programming_Skill': 'Aprender analítica digital: Google Analytics, Power BI y automatización de campañas para medir resultados de marca.',
+        'Communication_Skill': 'Practicar redacción publicitaria, storytelling y presentación de propuestas de campaña a clientes.',
+        'Teamwork': 'Participar en proyectos creativos grupales, agencias universitarias o concursos de marketing.',
+        'Industry_Exposure': 'Acercarse a agencias y áreas de marca: ferias, charlas y mentorías con profesionales de marketing.',
+        'Internship_Count': 'Buscar prácticas en marketing digital, redes sociales o investigación de mercados.'}),
+    'Ingeniería Industrial': ({'Programming_Skill': 0.6, 'Industry_Exposure': 1.2}, {
+        'Programming_Skill': 'Usar herramientas de análisis y automatización: Excel avanzado, Power BI, Python básico y simulación de procesos.',
+        'Communication_Skill': 'Practicar la presentación de indicadores y propuestas de mejora a jefaturas de planta.',
+        'Teamwork': 'Participar en proyectos de mejora continua con equipos multidisciplinarios en planta.',
+        'Industry_Exposure': 'Visitar plantas y almacenes: ferias, visitas guiadas y mentorías con ingenieros de producción y logística.',
+        'Internship_Count': 'Buscar prácticas en producción, calidad o logística.'}),
+    'Ingeniería Civil y Arquitectura': ({'Programming_Skill': 0.5, 'Industry_Exposure': 1.3}, {
+        'Programming_Skill': 'Dominar el software de la carrera: AutoCAD, Revit, S10 o MS Project para planos, presupuestos y cronogramas.',
+        'Communication_Skill': 'Practicar la redacción de informes técnicos y la comunicación con contratistas y supervisores.',
+        'Teamwork': 'Trabajar en equipos de obra y en proyectos grupales con roles definidos.',
+        'Industry_Exposure': 'Acercarse a obras: visitas de campo, ferias y mentorías con residentes e ingenieros de proyecto.',
+        'Internship_Count': 'Buscar prácticas en obra, supervisión o gestión de proyectos.'}),
+    'Ingeniería Agroindustrial': ({'Programming_Skill': 0.4, 'Industry_Exposure': 1.3}, {
+        'Programming_Skill': 'Aprender herramientas de datos para el campo y la planta: Excel avanzado, Power BI y sistemas de trazabilidad y calidad.',
+        'Communication_Skill': 'Practicar la comunicación clara de resultados de calidad y producción a supervisores y equipos de campo.',
+        'Teamwork': 'Trabajar en equipos de campaña y de planta, donde la coordinación es clave.',
+        'Industry_Exposure': 'Visitar fundos y plantas de proceso: ferias, visitas guiadas y mentorías con ingenieros agroindustriales.',
+        'Internship_Count': 'Buscar prácticas en campo, planta de proceso o aseguramiento de calidad.'}),
+    'Derecho': ({'Programming_Skill': 0.1, 'Communication_Skill': 1.4, 'GPA': 1.2}, {
+        'GPA': 'Reforzar los cursos jurídicos con menor nota y practicar con casos y jurisprudencia.',
+        'Programming_Skill': 'Familiarizarse con herramientas legales digitales: buscadores de jurisprudencia, expediente electrónico y ofimática avanzada.',
+        'Communication_Skill': 'Entrenar oratoria, argumentación y redacción jurídica: debates, simulacros de audiencia y escritos.',
+        'Teamwork': 'Participar en clínicas jurídicas y trabajos en equipo con casos reales.',
+        'Industry_Exposure': 'Acercarse a estudios jurídicos, entidades públicas y áreas legales: charlas, ferias y mentorías con abogados.',
+        'Internship_Count': 'Buscar prácticas en estudios jurídicos, juzgados o áreas legales de empresas.'}),
+    'Psicología': ({'Programming_Skill': 0.1, 'Communication_Skill': 1.3, 'Teamwork': 1.1}, {
+        'Programming_Skill': 'Aprender herramientas digitales de evaluación: Excel, SPSS o plataformas de pruebas psicométricas.',
+        'Communication_Skill': 'Entrenar la escucha activa, la entrevista y la comunicación empática.',
+        'Teamwork': 'Participar en talleres y proyectos grupales de intervención y bienestar.',
+        'Industry_Exposure': 'Acercarse a áreas de recursos humanos y consultoras: charlas, ferias y mentorías con psicólogos organizacionales.',
+        'Internship_Count': 'Buscar prácticas en recursos humanos, selección o bienestar.'}),
+    'Ciencias de la Salud': ({'Programming_Skill': 0.1, 'Communication_Skill': 1.2, 'Teamwork': 1.2}, {
+        'Programming_Skill': 'Familiarizarse con herramientas digitales clínicas: historias clínicas electrónicas y ofimática básica.',
+        'Communication_Skill': 'Practicar el trato con el paciente y la comunicación clara con familiares y equipo de salud.',
+        'Teamwork': 'Trabajar en equipos multidisciplinarios, como en prácticas hospitalarias y campañas de salud.',
+        'Industry_Exposure': 'Acercarse a clínicas y hospitales: voluntariados, campañas de salud y mentorías con profesionales.',
+        'Internship_Count': 'Buscar internados, voluntariados o prácticas en centros de salud y clínicas.'})}
 AFINIDAD = {'Programming_Skill': 'Ingeniería de Sistemas e IA', 'Communication_Skill': 'Marketing y Comunicación',
             'Teamwork': 'Administración y Negocios', 'GPA': 'Contabilidad y Finanzas',
             'Internship_Count': 'Administración y Negocios', 'Industry_Exposure': 'Ingeniería Industrial'}
@@ -212,17 +272,25 @@ def validar(datos):
     return valores, errores
 
 
-def recomendar(sistema, valores, clase):
+def recomendar(sistema, valores, clase, carrera=''):
     media_alta = sistema['perfil_clases'].loc['High']
     peso = np.clip(sistema['regresion'].coef_[2], 0, None)
+    relevancia, consejos = ENFOQUE.get(carrera, ({}, {}))
     filas = []
     for v, p in zip(VARIABLES, peso):
         brecha = (media_alta[v] - valores[v]) / sistema['desviacion'][v]
         if brecha > 0.1:
-            filas.append((brecha * p, v, valores[v], float(media_alta[v])))
+            filas.append((brecha * p * relevancia.get(v, 1.0), v, valores[v], float(media_alta[v])))
     filas.sort(reverse=True)
-    return [{'variable': ETIQUETAS[v], 'actual': round(act, 2), 'objetivo': round(obj, 2),
-             'consejo': CONSEJOS[v]} for _, v, act, obj in filas[:3]]
+    digital = v_digital(carrera)
+    return [{'variable': digital if v == 'Programming_Skill' and digital else ETIQUETAS[v],
+             'actual': round(act, 2), 'objetivo': round(obj, 2),
+             'consejo': consejos.get(v, CONSEJOS[v])} for _, v, act, obj in filas[:3]]
+
+
+def v_digital(carrera):
+    return '' if carrera in ('', 'Ingeniería de Sistemas e IA') else 'Herramientas digitales (programación)'
+
 
 def eliminar_tildes(texto):
     return ''.join(c for c in unicodedata.normalize('NFD', texto.lower()) if not unicodedata.combining(c))
@@ -235,11 +303,16 @@ def buscar_carrera(texto):
     return next((c for c in CARRERAS if t == limpiar(c) or t in limpiar(c)), '')
 
 
-def ofertas(comparacion, clase, carrera=''):
+def resolver_carrera(comparacion, carrera):
     elegida = buscar_carrera(carrera)
-    if not elegida:
-        mejor = max(range(len(VARIABLES)), key=lambda i: comparacion[i]['n_estudiante'])
-        elegida = AFINIDAD[VARIABLES[mejor]]
+    if elegida:
+        return elegida, True
+    mejor = max(range(len(VARIABLES)), key=lambda i: comparacion[i]['n_estudiante'])
+    return AFINIDAD[VARIABLES[mejor]], False
+
+
+def ofertas(comparacion, clase, carrera=''):
+    elegida, indicada = resolver_carrera(comparacion, carrera)
     datos = CARRERAS[elegida]
     tarjetas = []
     for nombre, dominio, enlace, rubro in datos['empresas']:
@@ -247,7 +320,7 @@ def ofertas(comparacion, clase, carrera=''):
         tarjetas.append({'empresa': nombre, 'dominio': dominio, 'rubro': rubro, 'puesto': datos['puesto'],
                          'funciones': datos['funciones'], 'habilidades': datos['habilidades'],
                          'modalidad': MODALIDAD[clase], 'enlace': busqueda})
-    return {'carrera': elegida, 'indicada': bool(buscar_carrera(carrera)), 'empresas': tarjetas}
+    return {'carrera': elegida, 'indicada': indicada, 'empresas': tarjetas}
 
 
 def predecir(sistema, valores, carrera=''):
@@ -275,7 +348,7 @@ def predecir(sistema, valores, carrera=''):
     return {'clase': clase, 'nivel': NIVELES[clase],
             'probabilidades': {c: round(float(p), 4) for c, p in zip(CLASES, prob)},
             'segunda_opinion': segunda, 'coincide': segunda == clase,
-            'recomendaciones': recomendar(sistema, valores, clase),
+            'recomendaciones': recomendar(sistema, valores, clase, resolver_carrera(comparacion, carrera)[0]),
             'comparacion': comparacion, 'fuera_de_rango': fuera,
             'ofertas': ofertas(comparacion, clase, carrera)}
 
