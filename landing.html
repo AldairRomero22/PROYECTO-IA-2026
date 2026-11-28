@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Emplea360 · Conoce tu competitividad laboral</title>
+<meta name="description" content="Sube tus notas y conoce tu probabilidad de competitividad laboral con un sistema inteligente.">
+<meta name="theme-color" content="#02040a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="prefetch" href="/sistema">
+<style>
+:root{--tx:#eef3f7;--mut:#9fb0bb;--hielo:#9fdcff;--bd:rgba(255,255,255,.16)}
+*{box-sizing:border-box}
+html:not(.lenis){scroll-behavior:smooth}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+html{background:#02040a;overflow-x:clip}
+body{overflow-x:clip}
+html,body{margin:0;color:var(--tx);font:16px/1.6 Poppins,system-ui,"Segoe UI",sans-serif}
+body{cursor:default}
+a{color:inherit;text-decoration:none}
+.fondo{position:fixed;inset:-5%;z-index:-3;background:#02040a url("{{ url_for('static', filename='fondo.jpg') }}") center/cover no-repeat;will-change:transform;transform:translate(calc(var(--bx,0)*-26px),calc(var(--by,0)*-16px)) scale(1.06);animation:deriva 26s ease-in-out infinite alternate}
+.velo{position:fixed;inset:0;z-index:-2;background:radial-gradient(ellipse at 70% 40%,transparent 25%,rgba(2,4,10,.5) 100%),linear-gradient(90deg,rgba(2,4,10,.55),transparent 55%),linear-gradient(180deg,rgba(2,4,10,.1),rgba(2,4,10,.55))}
+.grano{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.09;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>")}
+.progreso{position:fixed;top:0;left:0;right:0;height:3px;z-index:60;background:linear-gradient(90deg,#5fb4e6,#fff);transform-origin:left;transform:scaleX(var(--p,0))}
+.vidrio{position:relative;border-radius:28px;background:linear-gradient(150deg,rgba(255,255,255,.12),rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),inset 0 -1px 0 rgba(255,255,255,.05),0 24px 70px rgba(0,0,0,.55);-webkit-backdrop-filter:blur(22px) saturate(160%);backdrop-filter:blur(22px) saturate(160%);overflow:hidden}
+.vidrio::before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:radial-gradient(360px circle at var(--cx,50%) var(--cy,-20%),rgba(190,230,255,.2),transparent 60%);transition:opacity .3s}
+.vidrio>*{position:relative}
+nav.barra{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:40;display:flex;align-items:center;gap:28px;padding:10px 12px 10px 22px;border-radius:999px;width:min(960px,calc(100% - 28px));justify-content:space-between;background:rgba(10,16,22,.35);border:1px solid rgba(255,255,255,.18);-webkit-backdrop-filter:blur(22px) saturate(170%);backdrop-filter:blur(22px) saturate(170%);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 18px 50px rgba(0,0,0,.5);transition:background .4s,top .4s;animation:baja .9s cubic-bezier(.2,.8,.2,1) backwards}
+nav.barra.solida{background:rgba(6,10,14,.7)}
+.marca{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.01em}
+.marca b{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#fff,#8fb4c9);box-shadow:0 0 22px rgba(159,220,255,.6)}
+.marca b svg{width:16px;height:16px;stroke:#06121a;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.marca em{font-style:normal;color:var(--hielo)}
+.enlaces{display:flex;gap:26px;font-size:.88rem;color:#c3d0d8}
+.enlaces a{position:relative;padding:4px 0;transition:color .25s}
+.enlaces a::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:2px;border-radius:2px;background:var(--hielo);transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.enlaces a:hover{color:#fff}
+.enlaces a:hover::after{transform:scaleX(1)}
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:12px;padding:14px 28px;border-radius:999px;border:0;font:inherit;font-weight:600;font-size:.98rem;color:#06121a;background:linear-gradient(135deg,#ffffff,#a9c4d4);box-shadow:inset 0 1px 0 #fff,0 12px 36px rgba(159,220,255,.32);cursor:pointer;overflow:hidden;transform:translate(var(--tx,0),var(--ty,0));transition:transform .2s ease-out,box-shadow .3s}
+.btn:hover{box-shadow:inset 0 1px 0 #fff,0 18px 50px rgba(159,220,255,.55)}
+.btn:active{transform:scale(.96)}
+.btn::after{content:"";position:absolute;top:0;left:-70%;width:45%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.9),transparent);transform:skewX(-20deg);animation:destello 4.5s ease-in-out infinite}
+.btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s}
+.btn:hover svg{transform:translateX(5px)}
+.btn.cristal{color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.3);box-shadow:inset 0 1px 0 rgba(255,255,255,.35);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.btn.cristal::after{display:none}
+.btn.cristal:hover{background:rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 14px 40px rgba(0,0,0,.4)}
+.btn.chico{padding:10px 22px;font-size:.88rem}
+header.hero{min-height:100vh;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);align-items:center;gap:40px;width:min(1240px,calc(100% - 40px));margin:0 auto;padding:130px 0 70px}
+.chip{display:inline-flex;align-items:center;gap:10px;padding:7px 16px;border-radius:999px;font-size:.8rem;font-weight:500;color:#cfe3ef;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.2);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.chip i{width:8px;height:8px;border-radius:50%;background:#6ee7a0;box-shadow:0 0 0 0 rgba(110,231,160,.7);animation:latido 2s infinite}
+h1{margin:22px 0 22px;font-size:clamp(2.5rem,5.1vw,4.8rem);line-height:1.02;font-weight:700;letter-spacing:-.035em}
+h1 .w{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .04em .12em;margin-right:.14em}
+h1 .w>span{display:inline-block;background:linear-gradient(180deg,#fff 30%,#8fa6b4);-webkit-background-clip:text;background-clip:text;color:transparent;animation:palabra 1s cubic-bezier(.2,.9,.2,1) backwards;animation-delay:calc(var(--d)*90ms + .3s)}
+h1 .w.res>span{background:linear-gradient(100deg,#9fdcff 20%,#fff 45%,#9fdcff 70%);background-size:240% 100%;-webkit-background-clip:text;background-clip:text;animation:palabra 1s cubic-bezier(.2,.9,.2,1) backwards,brillo 5s linear infinite;animation-delay:calc(var(--d)*90ms + .3s),0s}
+.sub{text-shadow:0 2px 20px rgba(0,0,0,.75);margin:0 0 34px;max-width:540px;font-size:1.1rem;color:#bccad3;font-weight:300;animation:sube 1s cubic-bezier(.2,.8,.2,1) backwards 1s}
+.acciones{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:34px;animation:sube 1s cubic-bezier(.2,.8,.2,1) backwards 1.15s}
+.insignias{display:flex;gap:10px;flex-wrap:wrap;animation:sube 1s cubic-bezier(.2,.8,.2,1) backwards 1.3s}
+.insignias span{font-size:.78rem;color:#a9bac4;padding:6px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04)}
+.escena{position:relative;width:100%;max-width:620px;justify-self:end;aspect-ratio:1/.9;margin-bottom:50px;animation:aparece 1.2s cubic-bezier(.2,.8,.2,1) backwards .5s}
+.halo{position:absolute;left:6%;right:-4%;top:6%;bottom:8%;border-radius:50%;background:radial-gradient(circle at 55% 45%,rgba(143,211,255,.38),rgba(143,211,255,.08) 55%,transparent 72%);filter:blur(30px);animation:pulsa 6s ease-in-out infinite;translate:calc(var(--bx,0)*-18px) calc(var(--by,0)*-12px)}
+.personajes{position:absolute;right:-2%;top:0;width:100%;height:auto;pointer-events:none;user-select:none;filter:drop-shadow(0 34px 44px rgba(0,0,0,.6));transform:perspective(1000px) translate3d(calc(var(--bx,0)*16px),calc(var(--by,0)*10px),0) rotateY(calc(var(--bx,0)*8deg)) rotateX(calc(var(--by,0)*-5deg));will-change:transform}
+.tarjeta{position:absolute;left:-16%;bottom:-12%;width:72%;padding:16px;transform:perspective(1000px) rotateX(calc(var(--ry,0)*-7deg)) rotateY(calc(var(--rx,0)*9deg));translate:calc(var(--bx,0)*-14px) calc(var(--by,0)*-9px);will-change:transform;z-index:3}
+.tarjeta .cab{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.perfil{display:flex;align-items:center;gap:12px}
+.perfil .av{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,rgba(255,255,255,.35),rgba(120,160,190,.4));font-weight:600;font-size:.85rem}
+.perfil b{display:block;font-size:.95rem;line-height:1.2}
+.perfil small{color:var(--mut);font-size:.76rem}
+.etq{padding:5px 14px;border-radius:999px;font-size:.78rem;font-weight:600;color:#86efac;background:rgba(34,197,94,.14);border:1px solid rgba(34,197,94,.4)}
+.medidor{display:grid;grid-template-columns:116px minmax(0,1fr);gap:18px;align-items:center}
+.medidor svg{width:116px;height:116px;transform:rotate(-90deg)}
+.medidor circle{fill:none;stroke-width:11;stroke-linecap:round}
+.medidor .pista{stroke:rgba(255,255,255,.12)}
+.medidor .valor{stroke:url(#g-med);stroke-dasharray:339.3;stroke-dashoffset:339.3;transition:stroke-dashoffset 2s cubic-bezier(.2,.8,.2,1) .6s;filter:drop-shadow(0 0 8px rgba(159,220,255,.6))}
+.escena.in .medidor .valor{stroke-dashoffset:27}
+.centro{position:absolute;inset:0;display:grid;place-items:center;text-align:center;line-height:1.1}
+.centro strong{font-size:1.6rem;font-weight:700}
+.centro small{display:block;color:var(--mut);font-size:.7rem}
+.gauge{position:relative;width:116px;height:116px}
+.factores{display:grid;gap:12px}
+.fa{font-size:.8rem}
+.fa div{display:flex;justify-content:space-between;margin-bottom:5px;color:#d3dee5}
+.fa>span{display:block;height:7px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden}
+.fa i{display:block;height:100%;width:var(--v);border-radius:4px;background:linear-gradient(90deg,#5fb4e6,#fff);transform:scaleX(0);transform-origin:left;transition:transform 1.6s cubic-bezier(.2,.8,.2,1) .9s}
+.escena.in .fa i{transform:scaleX(1)}
+.pie{margin-top:12px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;gap:10px;font-size:.74rem;color:var(--mut)}
+.flota{position:absolute;padding:10px 16px;border-radius:18px;font-size:.8rem;font-weight:500;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 14px 36px rgba(0,0,0,.45);transform:translate3d(calc(var(--bx,0)*-26px),calc(var(--by,0)*-16px),0);animation:bob 5s ease-in-out infinite}
+.flota svg{width:18px;height:18px;fill:none;stroke:var(--hielo);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.flota.a{top:2%;right:-1%;z-index:4}
+.flota.b{bottom:24%;right:-3%;animation-delay:-2s;z-index:4}
+.relativo{position:relative}
+section{width:min(1240px,calc(100% - 40px));margin:0 auto;padding:90px 0}
+.titulo{max-width:680px;margin-bottom:46px}
+.titulo small{display:block;color:var(--hielo);font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:.76rem;margin-bottom:14px}
+.titulo h2{margin:0 0 14px;font-size:clamp(2rem,4.4vw,3.4rem);line-height:1.08;letter-spacing:-.03em;font-weight:700;background:linear-gradient(180deg,#fff 35%,#8fa6b4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.titulo p{margin:0;color:#aebdc7;font-weight:300;font-size:1.05rem}
+.cifras{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;padding:48px 0}
+.cifra{padding:26px 24px;text-align:left}
+.cifra strong{display:block;font-size:clamp(2.2rem,4vw,3.2rem);font-weight:700;line-height:1;letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#8fd3ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cifra span{display:block;margin-top:10px;color:var(--mut);font-size:.88rem}
+.rejilla3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.paso{padding:32px 28px;min-height:250px;transition:translate .45s cubic-bezier(.2,.8,.2,1),opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}
+.paso:hover{translate:0 -8px}
+.paso .num{position:absolute;right:20px;top:6px;font-size:6rem;font-weight:700;line-height:1;color:rgba(255,255,255,.06);letter-spacing:-.05em}
+.ico{display:grid;place-items:center;width:52px;height:52px;border-radius:16px;margin-bottom:22px;background:linear-gradient(135deg,rgba(255,255,255,.25),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.28);box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+.ico svg{width:24px;height:24px;fill:none;stroke:#e8f6ff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.paso h3,.fac h3{margin:0 0 8px;font-size:1.2rem;font-weight:600}
+.paso p,.fac p{margin:0;color:#aebdc7;font-size:.94rem;font-weight:300}
+.rejilla6{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.fac{padding:26px 24px;transition:translate .45s cubic-bezier(.2,.8,.2,1),opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}
+.fac:hover{translate:0 -6px}
+.fac em{display:inline-block;margin-top:14px;font-style:normal;font-size:.76rem;padding:4px 12px;border-radius:999px;color:var(--hielo);background:rgba(159,220,255,.1);border:1px solid rgba(159,220,255,.25)}
+.c3d,.p3d{transform-style:preserve-3d}
+.escena3d{position:relative;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);align-items:center;gap:clamp(24px,5vw,80px);perspective:1500px}
+.cv3d{position:relative;justify-self:center;width:min(400px,100%);transform:rotateY(calc(var(--bx,0)*9deg)) rotateX(calc(var(--by,0)*-6deg));transform-style:preserve-3d}
+.cv-in{position:relative;transform-style:preserve-3d;animation:giro 28s linear infinite}
+.cv-in img,.cv-in svg{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.cv-dorso{position:absolute;inset:0;transform:rotateY(180deg);backface-visibility:hidden;-webkit-backface-visibility:hidden;display:grid;place-items:center;background:linear-gradient(145deg,#fdfdfd,#e6e9ec);border:1px solid rgba(0,0,0,.12);box-shadow:0 40px 50px rgba(0,0,0,.35)}
+.cv-dorso b{font-size:2rem;letter-spacing:-.03em;color:#1c2630}
+.cv-dorso b em{font-style:normal;color:#1d8fe0}
+.cv-dorso::before{content:"";position:absolute;inset:8% 10%;background:repeating-linear-gradient(180deg,transparent 0 34px,rgba(28,38,48,.18) 34px 36px);opacity:.7}
+.cv-dorso b{position:relative;padding:8px 18px;background:#fdfdfd;border-radius:14px}
+.cv-in img{display:block;width:100%;height:auto;filter:drop-shadow(0 40px 50px rgba(0,0,0,.6));user-select:none}
+.cv-aura{position:absolute;inset:-14% -26%;background:radial-gradient(circle,rgba(143,211,255,.32),transparent 62%);filter:blur(34px);pointer-events:none}
+.cv-in svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.cv-in path{fill:none;stroke:#1d8fe0;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:80;stroke-dashoffset:80;animation:marca 7s ease-in-out infinite}
+.cv-in path:nth-child(2){animation-delay:.5s}.cv-in path:nth-child(3){animation-delay:1s}.cv-in path:nth-child(4){animation-delay:1.5s}.cv-in path:nth-child(5){animation-delay:2s}
+.cv-etq{position:absolute;right:-14%;bottom:12%;z-index:5;transform:translateZ(80px);padding:10px 18px;border-radius:18px;font-size:.82rem;font-weight:600;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 14px 36px rgba(0,0,0,.45)}
+.pasos-lista{list-style:none;margin:0;padding:0;display:grid;gap:16px}
+.pa{display:grid;grid-template-columns:54px minmax(0,1fr);gap:18px;align-items:center;padding:20px 22px;border-radius:24px;background:linear-gradient(150deg,rgba(255,255,255,.1),rgba(255,255,255,.03)),rgba(6,10,16,.4);border:1px solid rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 14px 40px rgba(0,0,0,.4);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+.pa .n{display:grid;place-items:center;width:54px;height:54px;border-radius:50%;font-weight:700;font-size:1.2rem;color:#06121a;background:linear-gradient(135deg,#fff,#8fb4c9);box-shadow:0 0 24px rgba(159,220,255,.4)}
+.pa h3{margin:0 0 4px;font-size:1.12rem;font-weight:600}
+.pa p{margin:0;color:#aebdc7;font-size:.92rem;font-weight:300}
+.rejilla-r{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;perspective:1600px}
+.carrera,.portal{position:relative;height:100%;border-radius:28px;padding:28px 26px;background:linear-gradient(150deg,rgba(255,255,255,.12),rgba(255,255,255,.035)),rgba(6,10,16,.4);border:1px solid rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 24px 60px rgba(0,0,0,.5);-webkit-backdrop-filter:blur(20px) saturate(150%);backdrop-filter:blur(20px) saturate(150%);overflow:hidden;transform:perspective(900px) rotateX(calc(var(--ty,0)*-8deg)) rotateY(calc(var(--tx,0)*10deg));transition:transform .25s ease-out}
+.carrera::before,.portal::before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:radial-gradient(320px circle at var(--cx,50%) var(--cy,-20%),rgba(190,230,255,.18),transparent 60%)}
+.carrera>*,.portal>*{position:relative}
+.carrera h3,.portal h3{margin:0 0 6px;font-size:1.25rem;font-weight:600;letter-spacing:-.01em}
+.carrera .lab{display:block;margin:16px 0 8px;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--hielo);font-weight:600}
+.carrera ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.carrera li{padding:5px 12px;border-radius:999px;font-size:.8rem;color:#dbe7ee;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16)}
+.carrera p{margin:0;color:#aebdc7;font-size:.9rem;font-weight:300}
+.nota-r{margin:26px 0 0;color:var(--mut);font-size:.82rem}
+.tipos{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 30px}
+.tipos span{padding:8px 18px;border-radius:999px;font-size:.88rem;font-weight:500;color:#e8f0f5;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.rejilla-p{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;perspective:1600px}
+.portal{display:flex;flex-direction:column;gap:10px}
+.portal p{margin:0;color:#aebdc7;font-size:.9rem;font-weight:300;flex:1}
+.portal .ir{display:inline-flex;align-items:center;gap:8px;margin-top:8px;font-weight:600;font-size:.9rem;color:var(--hielo)}
+.portal .ir svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s}
+.portal:hover .ir svg{transform:translate(4px,-4px)}
+@media (max-width:1100px){.rejilla-p{grid-template-columns:1fr 1fr}.rejilla-r{grid-template-columns:1fr 1fr}}
+@media (max-width:899px){.escena3d{grid-template-columns:1fr}.cv3d{width:min(300px,80%)}.cv-etq{right:-6%}}
+@media (max-width:640px){.rejilla-r,.rejilla-p{grid-template-columns:1fr}}
+.cinta{overflow:hidden;padding:20px 0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.cinta div{display:flex;gap:14px;width:max-content;animation:cinta 34s linear infinite}
+.cinta:hover div{animation-play-state:paused}
+.cinta span{padding:12px 26px;border-radius:999px;font-weight:500;font-size:.95rem;white-space:nowrap;color:#dbe7ee;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+.final{padding:70px 40px;text-align:center}
+.final h2{margin:0 auto 16px;max-width:760px;font-size:clamp(2rem,4.8vw,3.8rem);line-height:1.08;letter-spacing:-.03em;font-weight:700;background:linear-gradient(180deg,#fff 35%,#8fa6b4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.final p{margin:0 auto 32px;max-width:520px;color:#aebdc7;font-weight:300}
+footer{width:min(1240px,calc(100% - 40px));margin:0 auto;padding:36px 0 50px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.12);color:var(--mut);font-size:.82rem}
+footer b{color:#dfe8ee}
+.rv{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1);transition-delay:calc(var(--i,0)*90ms)}
+.rv.in{opacity:1;transform:none}
+.cortina{position:fixed;inset:0;z-index:100;pointer-events:none;background:radial-gradient(circle at 50% 40%,#17222c,#02040a);clip-path:circle(0 at var(--ox,50%) var(--oy,50%));transition:clip-path .85s cubic-bezier(.7,0,.2,1)}
+.cortina.on{clip-path:circle(150% at var(--ox,50%) var(--oy,50%))}
+@keyframes pulsa{0%,100%{opacity:.75;scale:1}50%{opacity:1;scale:1.07}}
+@keyframes giro{from{transform:rotateX(6deg) rotateY(0deg)}to{transform:rotateX(6deg) rotateY(360deg)}}
+@keyframes marca{0%,8%{stroke-dashoffset:80}22%,82%{stroke-dashoffset:0}96%,100%{stroke-dashoffset:80}}
+@keyframes deriva{from{scale:1.04}to{scale:1.1}}
+@keyframes baja{from{opacity:0;transform:translate(-50%,-40px)}to{opacity:1;transform:translateX(-50%)}}
+@keyframes palabra{from{transform:translateY(115%) rotate(4deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes sube{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+@keyframes aparece{from{opacity:0;transform:translateY(60px) scale(.92)}to{opacity:1;transform:none}}
+@keyframes brillo{to{background-position:-240% 0}}
+@keyframes destello{0%,60%{left:-70%}100%{left:140%}}
+@keyframes bob{0%,100%{translate:0 0}50%{translate:0 -12px}}
+@keyframes latido{70%{box-shadow:0 0 0 9px rgba(110,231,160,0)}100%{box-shadow:0 0 0 0 rgba(110,231,160,0)}}
+@keyframes cinta{to{transform:translateX(-50%)}}
+@media (max-width:980px){header.hero{grid-template-columns:1fr;padding-top:120px}.escena{justify-self:center;max-width:520px;margin-top:20px}.cifras{grid-template-columns:1fr 1fr}.rejilla3,.rejilla6{grid-template-columns:1fr 1fr}.enlaces{display:none}}
+@media (max-width:640px){.escena{aspect-ratio:auto;display:flex;flex-direction:column;margin-bottom:30px}.personajes{position:relative;right:auto;width:94%;margin:0 auto}.tarjeta{position:relative;left:auto;bottom:auto;width:100%;margin-top:-56px;padding:16px;translate:none}.flota{font-size:.72rem;padding:8px 12px}.flota.b{display:none}.rejilla3,.rejilla6{grid-template-columns:1fr}.medidor{grid-template-columns:1fr;justify-items:center}.cifras{grid-template-columns:1fr 1fr}.final{padding:50px 22px}nav.barra{padding-left:16px}.flota.a{right:0}.flota.b{left:auto;right:0}section{padding:64px 0}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}.fa i{transform:none}.medidor .valor{stroke-dashoffset:27}h1 .w>span{opacity:1}}
+</style>
+</head>
+<body>
+<div class="fondo"></div>
+<div class="velo"></div>
+<div class="grano"></div>
+<div class="progreso" id="progreso"></div>
+<div class="cortina" id="cortina"></div>
+
+<nav class="barra" id="barra">
+<a class="marca" href="/"><b><svg viewBox="0 0 24 24"><path d="M9.5 3a3.5 3.5 0 0 0-3.4 4.3A3.5 3.5 0 0 0 5 14a3.5 3.5 0 0 0 4.5 4.8V3zM14.5 3a3.5 3.5 0 0 1 3.4 4.3A3.5 3.5 0 0 1 19 14a3.5 3.5 0 0 1-4.5 4.8V3z"/></svg></b><span>Emplea<em>360</em></span></a>
+<div class="enlaces"><a href="#como">Cómo funciona</a><a href="#empezar">Empezar</a><a href="#carreras">Carreras</a><a href="#ofertas">Ofertas</a></div>
+<a class="btn chico" href="/sistema" data-entrar>Entrar<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+</nav>
+
+<header class="hero" id="inicio">
+<div>
+<span class="chip"><i></i>Sistema inteligente · UPAO Trujillo</span>
+<h1><span class="w" style="--d:0"><span>Sube</span></span><span class="w" style="--d:1"><span>tus</span></span><span class="w" style="--d:2"><span>notas</span></span><span class="w" style="--d:3"><span>y</span></span><span class="w" style="--d:4"><span>conoce</span></span><span class="w" style="--d:5"><span>tu</span></span><span class="w res" style="--d:6"><span>competitividad</span></span><span class="w res" style="--d:7"><span>laboral</span></span></h1>
+<p class="sub">Ingresa tus notas y habilidades, o sube tu archivo de Excel. En segundos sabrás tu probabilidad de competitividad laboral y qué reforzar para conseguir empleo.</p>
+<div class="acciones">
+<a class="btn" href="/sistema" data-entrar>Entrar al sistema<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+<a class="btn cristal" href="#como">Ver cómo funciona</a>
+</div>
+<div class="insignias"><span>Sube tu Excel o CSV</span><span>Resultado al instante</span><span>Recomendaciones para ti</span></div>
+</div>
+<div class="escena relativo" id="escena">
+<div class="halo"></div>
+<img class="personajes" src="{{ url_for('static', filename='equipo.webp') }}" alt="Dos profesionales sonrientes con una laptop" width="1100" height="927">
+<div class="tarjeta vidrio" id="tarjeta">
+<div class="cab"><div class="perfil"><span class="av">TÚ</span><div><b>Tu resultado</b><small>Ejemplo de vista previa</small></div></div><span class="etq">Competitividad Alta</span></div>
+<div class="medidor">
+<div class="gauge"><svg viewBox="0 0 120 120"><defs><linearGradient id="g-med" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5fb4e6"/><stop offset="1" stop-color="#ffffff"/></linearGradient></defs><circle class="pista" cx="60" cy="60" r="54"/><circle class="valor" cx="60" cy="60" r="54"/></svg><div class="centro"><div><strong data-n="92" data-s="%">0%</strong><small>probabilidad</small></div></div></div>
+<div class="factores">
+<div class="fa"><div><b>Programación</b><span>8 / 10</span></div><span><i style="--v:80%"></i></span></div>
+<div class="fa"><div><b>Exposición laboral</b><span>7 / 10</span></div><span><i style="--v:70%"></i></span></div>
+<div class="fa"><div><b>Trabajo en equipo</b><span>9 / 10</span></div><span><i style="--v:90%"></i></span></div>
+<div class="fa"><div><b>Prácticas</b><span>2</span></div><span><i style="--v:20%"></i></span></div>
+</div>
+</div>
+<div class="pie"><span>Red neuronal MLP</span><span>Segunda opinión: regresión logística</span></div>
+</div>
+<div class="flota a"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg>Tu perfil en ascenso</div>
+<div class="flota b"><svg viewBox="0 0 24 24"><path d="M4 7h16v12H4zM9 7V5h6v2"/></svg>Listo para prácticas</div>
+</div>
+</header>
+
+<section class="cifras" style="padding-top:20px">
+<div class="vidrio cifra rv" style="--i:0"><strong data-n="{{ datos.total }}">0</strong><span>Registros de entrenamiento</span></div>
+<div class="vidrio cifra rv" style="--i:1"><strong data-n="6">0</strong><span>Variables analizadas</span></div>
+<div class="vidrio cifra rv" style="--i:2"><strong data-n="2">0</strong><span>Modelos que se contrastan</span></div>
+<div class="vidrio cifra rv" style="--i:3"><strong data-n="500">0</strong><span>Perfiles por archivo</span></div>
+</section>
+
+<section id="como">
+<div class="titulo rv"><small>Cómo funciona</small><h2>De un archivo de notas a un plan de mejora.</h2><p>Tres pasos, sin configuraciones: sube tus notas, deja que el modelo te evalúe y actúa con recomendaciones concretas.</p></div>
+<div class="rejilla3">
+<article class="vidrio paso rv" style="--i:0"><span class="num">01</span><div class="ico"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg></div><h3>Sube tus notas</h3><p>Escribe tus datos o sube tu archivo de Excel o CSV. El sistema reconoce las columnas en español e inglés.</p></article>
+<article class="vidrio paso rv" style="--i:1"><span class="num">02</span><div class="ico"><svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/><path d="M7 6l3.5 5M7 18l3.5-5M14 12h3"/></svg></div><h3>El modelo te evalúa</h3><p>Una red neuronal estima tu probabilidad de competitividad Alta, Media o Baja y una regresión logística da una segunda opinión.</p></article>
+<article class="vidrio paso rv" style="--i:2"><span class="num">03</span><div class="ico"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2V17h6v-.3c0-.8.4-1.5 1-2A7 7 0 0 0 12 2z"/></svg></div><h3>Mejora con claridad</h3><p>Mira tu perfil comparado con cada nivel y las tres recomendaciones que más pesan para llegar a competitividad Alta.</p></article>
+</div>
+</section>
+
+<section id="factores">
+<div class="titulo rv"><small>Factores</small><h2>Seis variables que el mercado laboral sí mira.</h2><p>El sistema pondera cada factor según su peso en el modelo, para que sepas dónde reforzar primero.</p></div>
+<div class="rejilla6">
+<article class="vidrio fac rv" style="--i:0"><div class="ico"><svg viewBox="0 0 24 24"><path d="M22 10L12 5 2 10l10 5 10-5zM6 12v5c3 2 9 2 12 0v-5"/></svg></div><h3>Promedio</h3><p>Tu rendimiento académico acumulado.</p><em>0 a 10</em></article>
+<article class="vidrio fac rv" style="--i:1"><div class="ico"><svg viewBox="0 0 24 24"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg></div><h3>Programación</h3><p>Nivel de habilidades técnicas de programación.</p><em>1 a 10</em></article>
+<article class="vidrio fac rv" style="--i:2"><div class="ico"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-6.4A8 8 0 1 1 21 12z"/></svg></div><h3>Comunicación</h3><p>Capacidad de expresarse y presentar ideas con claridad.</p><em>1 a 10</em></article>
+<article class="vidrio fac rv" style="--i:3"><div class="ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2 20c0-4 3-6 7-6s7 2 7 6M16 4.5a3.5 3.5 0 0 1 0 7M22 20c0-3-1.5-4.8-4-5.6"/></svg></div><h3>Trabajo en equipo</h3><p>Colaboración y desempeño dentro de equipos de trabajo.</p><em>1 a 10</em></article>
+<article class="vidrio fac rv" style="--i:4"><div class="ico"><svg viewBox="0 0 24 24"><path d="M4 7h16v12H4zM9 7V5h6v2M4 13h16"/></svg></div><h3>Prácticas</h3><p>Experiencia en prácticas preprofesionales realizadas.</p><em>0 a 10</em></article>
+<article class="vidrio fac rv" style="--i:5"><div class="ico"><svg viewBox="0 0 24 24"><path d="M4 21V5l8-2v18M12 8h8v13M8 9h.01M8 13h.01M8 17h.01M16 12h.01M16 16h.01"/></svg></div><h3>Exposición laboral</h3><p>Contacto real con empresas, industria y entorno profesional.</p><em>0 a 10</em></article>
+</div>
+</section>
+
+<section class="empezar" id="empezar">
+<div class="titulo rv"><small>Tu primer empleo</small><h2>Cómo empezar a trabajar.</h2><p>Cuatro pasos para pasar de estudiante a candidato, aunque aún no tengas experiencia.</p></div>
+<div class="escena3d" id="pasos3d">
+<div class="cv3d"><div class="cv-aura"></div><div class="cv-in"><img src="{{ url_for('static', filename='cv.webp') }}" alt="Hoja de currículum con foto y lista de verificación" width="800" height="1231" loading="lazy"><svg viewBox="0 0 800 1231" aria-hidden="true"><path class="tk" d="M664 554L680 570L708 534"/><path class="tk" d="M664 664L680 680L708 644"/><path class="tk" d="M664 774L680 790L708 754"/><path class="tk" d="M664 884L680 900L708 864"/><path class="tk" d="M664 994L680 1010L708 974"/></svg><div class="cv-dorso"><b>Emplea<em>360</em></b></div></div><span class="cv-etq">Tu CV, listo</span></div>
+<ol class="pasos-lista">
+<li class="pa"><span class="n">1</span><div><h3>Arma tu CV</h3><p>Una página, datos de contacto, formación, proyectos y habilidades. Usa tus resultados de Emplea360 para saber qué destacar.</p></div></li>
+<li class="pa"><span class="n">2</span><div><h3>Crea tu perfil profesional</h3><p>Completa tu perfil en LinkedIn y reúne tus trabajos del curso en un portafolio sencillo.</p></div></li>
+<li class="pa"><span class="n">3</span><div><h3>Busca prácticas y primeras ofertas</h3><p>Empieza por prácticas preprofesionales y programas para recién egresados en portales de empleo y en la bolsa de trabajo de tu universidad.</p></div></li>
+<li class="pa"><span class="n">4</span><div><h3>Postula y prepara la entrevista</h3><p>Ensaya cómo presentarte, cuenta tus proyectos con ejemplos y refuerza las habilidades que el sistema te recomienda.</p></div></li>
+</ol>
+</div>
+</section>
+
+<section id="carreras">
+<div class="titulo rv"><small>Según tu carrera</small><h2>En qué ramas puedes trabajar.</h2><p>Un punto de partida para explorar: cada carrera abre varios caminos y los primeros puestos suelen ser prácticas o cargos de asistente y analista junior.</p></div>
+<div class="rejilla-r">
+<div class="c3d"><article class="carrera"><h3>Sistemas e Inteligencia Artificial</h3><span class="lab">Ramas</span><ul><li>Desarrollo de software</li><li>Ciencia de datos</li><li>Ciberseguridad</li><li>Soporte y redes</li><li>Gestión de proyectos TI</li></ul><span class="lab">Primeros puestos</span><p>Practicante de desarrollo, analista de datos junior, soporte técnico.</p></article></div>
+<div class="c3d"><article class="carrera"><h3>Administración y Negocios</h3><span class="lab">Ramas</span><ul><li>Gestión comercial</li><li>Recursos humanos</li><li>Logística y operaciones</li><li>Emprendimiento</li><li>Consultoría</li></ul><span class="lab">Primeros puestos</span><p>Asistente administrativo, analista comercial, practicante de RR. HH.</p></article></div>
+<div class="c3d"><article class="carrera"><h3>Contabilidad y Finanzas</h3><span class="lab">Ramas</span><ul><li>Auditoría</li><li>Tributación</li><li>Banca y seguros</li><li>Análisis financiero</li><li>Tesorería</li></ul><span class="lab">Primeros puestos</span><p>Asistente contable, auxiliar de auditoría, analista de créditos junior.</p></article></div>
+<div class="c3d"><article class="carrera"><h3>Ingeniería Industrial</h3><span class="lab">Ramas</span><ul><li>Producción</li><li>Calidad</li><li>Cadena de suministro</li><li>Mejora continua</li><li>Seguridad y salud ocupacional</li></ul><span class="lab">Primeros puestos</span><p>Practicante de planta, analista de procesos, asistente de calidad.</p></article></div>
+<div class="c3d"><article class="carrera"><h3>Marketing y Comunicación</h3><span class="lab">Ramas</span><ul><li>Marketing digital</li><li>Contenido y redes</li><li>Publicidad</li><li>Relaciones públicas</li><li>Investigación de mercado</li></ul><span class="lab">Primeros puestos</span><p>Asistente de marketing, community manager junior, analista de redes.</p></article></div>
+<div class="c3d"><article class="carrera"><h3>Derecho</h3><span class="lab">Ramas</span><ul><li>Estudio jurídico</li><li>Asesoría corporativa</li><li>Cumplimiento normativo</li><li>Sector público</li><li>Notarial y registral</li></ul><span class="lab">Primeros puestos</span><p>Asistente legal, practicante en estudio jurídico, analista de cumplimiento junior.</p></article></div>
+</div>
+<p class="nota-r">Información orientativa: los cargos y requisitos varían según la empresa, la ciudad y el momento del mercado.</p>
+</section>
+
+<section id="ofertas">
+<div class="titulo rv"><small>Ofertas laborales</small><h2>Dónde buscar tu primera oportunidad.</h2><p>Estos portales reúnen ofertas de empleo y prácticas en Perú. Filtra por tu carrera y por nivel de ingreso o practicante.</p></div>
+<div class="tipos rv"><span>Prácticas preprofesionales</span><span>Programas para recién egresados</span><span>Proyectos freelance</span><span>Primer empleo</span></div>
+<div class="rejilla-p">
+<div class="p3d"><a class="portal" href="https://www.linkedin.com/jobs/" target="_blank" rel="noopener"><h3>LinkedIn Empleos</h3><p>Ofertas de empresas y contacto directo con reclutadores. Ideal para armar tu perfil y postular con un clic.</p><span class="ir">Ir al portal<svg viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a></div>
+<div class="p3d"><a class="portal" href="https://www.bumeran.com.pe/" target="_blank" rel="noopener"><h3>Bumeran</h3><p>Portal de empleo con filtros por área, ciudad y nivel. Útil para primeras ofertas y puestos junior.</p><span class="ir">Ir al portal<svg viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a></div>
+<div class="p3d"><a class="portal" href="https://pe.computrabajo.com/" target="_blank" rel="noopener"><h3>Computrabajo</h3><p>Gran volumen de ofertas en todo el país, con búsqueda por carrera y por ciudad.</p><span class="ir">Ir al portal<svg viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a></div>
+<div class="p3d"><a class="portal" href="https://pe.indeed.com/" target="_blank" rel="noopener"><h3>Indeed</h3><p>Buscador que reúne ofertas de muchos sitios. Crea alertas para enterarte de nuevas publicaciones.</p><span class="ir">Ir al portal<svg viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a></div>
+</div>
+</section>
+
+<section id="modulos" style="padding-bottom:30px">
+<div class="titulo rv"><small>El sistema</small><h2>Un panel completo, en un solo lugar.</h2></div>
+<div class="cinta rv"><div>
+<span>Panel de control</span><span>Evaluar estudiante</span><span>Evaluación masiva</span><span>Resultados</span><span>Historial</span><span>Conjunto de datos</span><span>Acerca del sistema</span>
+<span>Panel de control</span><span>Evaluar estudiante</span><span>Evaluación masiva</span><span>Resultados</span><span>Historial</span><span>Conjunto de datos</span><span>Acerca del sistema</span>
+</div></div>
+</section>
+
+<section>
+<div class="vidrio final rv">
+<h2>Descubre en segundos qué tan competitivo eres.</h2>
+<p>Entra al sistema, sube tus notas y obtén tu probabilidad y tus recomendaciones al instante.</p>
+<a class="btn" href="/sistema" data-entrar>Entrar al sistema<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+</div>
+</section>
+
+<footer>
+<div><b>Emplea360</b> · Proyecto del curso ISIA-108 · Universidad Privada Antenor Orrego · Trujillo, Perú</div>
+<div>Aguirre Anampa · Romero Asmat · Rujel Álvarez · Salvatierra Prieto</div>
+</footer>
+
+<script>
+(function () {
+  const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const raiz = document.documentElement;
+  const barra = document.getElementById('barra');
+  const progreso = document.getElementById('progreso');
+  const escena = document.getElementById('escena');
+  const tarjeta = document.getElementById('tarjeta');
+  const meta = {x: 0, y: 0, rx: 0, ry: 0};
+  const act = {x: 0, y: 0, rx: 0, ry: 0};
+  const fijar = (el, n, v) => el.style.setProperty(n, v.toFixed(4));
+
+  function bucle() {
+    let cambio = false;
+    for (const k in meta) {
+      const d = meta[k] - act[k];
+      if (Math.abs(d) > 0.0004) { act[k] += d * 0.075; cambio = true; }
+    }
+    if (cambio) {
+      fijar(raiz, '--bx', act.x);
+      fijar(raiz, '--by', act.y);
+      fijar(tarjeta, '--rx', act.rx);
+      fijar(tarjeta, '--ry', act.ry);
+    }
+    requestAnimationFrame(bucle);
+  }
+  if (!reducido) bucle();
+
+  addEventListener('pointermove', e => {
+    meta.x = e.clientX / innerWidth * 2 - 1;
+    meta.y = e.clientY / innerHeight * 2 - 1;
+    const v = e.target.closest && e.target.closest('.vidrio');
+    if (v) {
+      const q = v.getBoundingClientRect();
+      v.style.setProperty('--cx', (e.clientX - q.left) + 'px');
+      v.style.setProperty('--cy', (e.clientY - q.top) + 'px');
+    }
+  });
+
+  const hero = document.getElementById('inicio');
+  hero.addEventListener('pointermove', e => {
+    const r = tarjeta.getBoundingClientRect();
+    meta.rx = Math.max(-1, Math.min(1, (e.clientX - r.left) / r.width * 2 - 1));
+    meta.ry = Math.max(-1, Math.min(1, (e.clientY - r.top) / r.height * 2 - 1));
+  });
+  hero.addEventListener('pointerleave', () => { meta.rx = 0; meta.ry = 0; });
+
+  document.querySelectorAll('.btn').forEach(b => {
+    b.addEventListener('pointermove', e => {
+      const r = b.getBoundingClientRect();
+      b.style.setProperty('--tx', ((e.clientX - r.left - r.width / 2) * .2).toFixed(1) + 'px');
+      b.style.setProperty('--ty', ((e.clientY - r.top - r.height / 2) * .3).toFixed(1) + 'px');
+    });
+    b.addEventListener('pointerleave', () => {
+      b.style.removeProperty('--tx');
+      b.style.removeProperty('--ty');
+    });
+  });
+
+  function alDesplazar() {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    progreso.style.setProperty('--p', max > 0 ? (scrollY / max).toFixed(4) : 0);
+    barra.classList.toggle('solida', scrollY > 40);
+  }
+  addEventListener('scroll', alDesplazar, {passive: true});
+  alDesplazar();
+
+  function contar(el) {
+    const meta = parseFloat(el.dataset.n);
+    const sufijo = el.dataset.s || '';
+    const miles = meta >= 1000;
+    if (reducido) { el.textContent = (miles ? meta.toLocaleString('en-US') : meta) + sufijo; return; }
+    const t0 = performance.now();
+    const paso = t => {
+      const f = Math.min((t - t0) / 1600, 1);
+      const v = Math.round(meta * (1 - Math.pow(1 - f, 4)));
+      el.textContent = (miles ? v.toLocaleString('en-US') : v) + sufijo;
+      if (f < 1) requestAnimationFrame(paso);
+    };
+    requestAnimationFrame(paso);
+  }
+
+  const io = new IntersectionObserver(items => {
+    items.forEach(it => {
+      if (!it.isIntersecting) return;
+      it.target.classList.add('in');
+      it.target.querySelectorAll('[data-n]').forEach(contar);
+      if (it.target.matches('[data-n]')) contar(it.target);
+      io.unobserve(it.target);
+    });
+  }, {threshold: .25});
+  document.querySelectorAll('.rv').forEach(el => io.observe(el));
+  io.observe(escena);
+
+  const cortina = document.getElementById('cortina');
+  document.querySelectorAll('[data-entrar]').forEach(a => {
+    a.addEventListener('click', e => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+      e.preventDefault();
+      const r = a.getBoundingClientRect();
+      cortina.style.setProperty('--ox', (r.left + r.width / 2) + 'px');
+      cortina.style.setProperty('--oy', (r.top + r.height / 2) + 'px');
+      cortina.classList.add('on');
+      setTimeout(() => { location.href = a.getAttribute('href'); }, reducido ? 0 : 820);
+    });
+  });
+  addEventListener('pageshow', e => { if (e.persisted) cortina.classList.remove('on'); });
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function () {
+  if (!window.Lenis || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const lenis = new Lenis({lerp: 0.085, wheelMultiplier: 0.95, smoothWheel: true});
+  window.__lenis = lenis;
+  if (window.gsap && window.ScrollTrigger) {
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+  } else {
+    const paso = t => { lenis.raf(t); requestAnimationFrame(paso); };
+    requestAnimationFrame(paso);
+  }
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const id = a.getAttribute('href');
+      const destino = id.length > 1 && document.querySelector(id);
+      if (!destino) return;
+      e.preventDefault();
+      lenis.scrollTo(destino, {offset: -20, duration: 1.4});
+    });
+  });
+})();
+</script>
+<script>
+(function () {
+  if (!window.gsap || !window.ScrollTrigger || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.utils.toArray('.pa').forEach(p => {
+    gsap.fromTo(p, {opacity: 0, x: 80, rotateY: -40, transformOrigin: '0% 50%'}, {opacity: 1, x: 0, rotateY: 0, ease: 'power3.out', scrollTrigger: {trigger: p, start: 'top 96%', end: 'top 62%', scrub: 1}});
+  });
+
+  gsap.utils.toArray('.c3d').forEach((el, i) => {
+    gsap.fromTo(el, {rotateX: -75, y: 150, z: -300, opacity: 0, transformOrigin: '50% 100%'}, {rotateX: 0, y: 0, z: 0, opacity: 1, ease: 'power3.out', scrollTrigger: {trigger: el, start: 'top 96%', end: 'top 55%', scrub: 1}});
+  });
+
+  gsap.utils.toArray('.p3d').forEach((el, i) => {
+    const lado = i % 2 ? 1 : -1;
+    gsap.fromTo(el, {rotateY: lado * 70, x: lado * 140, z: -240, opacity: 0, transformOrigin: lado < 0 ? '0% 50%' : '100% 50%'}, {rotateY: 0, x: 0, z: 0, opacity: 1, ease: 'power3.out', scrollTrigger: {trigger: el, start: 'top 96%', end: 'top 58%', scrub: 1}});
+  });
+
+  gsap.utils.toArray('.titulo h2').forEach(h => {
+    gsap.fromTo(h, {letterSpacing: '0.04em'}, {letterSpacing: '-0.03em', ease: 'none', scrollTrigger: {trigger: h, start: 'top 92%', end: 'top 55%', scrub: true}});
+  });
+
+  addEventListener('load', () => ScrollTrigger.refresh());
+})();
+</script>
+<script>
+(function () {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('.carrera, .portal').forEach(el => {
+    el.addEventListener('pointermove', e => {
+      const r = el.getBoundingClientRect();
+      el.style.setProperty('--tx', ((e.clientX - r.left) / r.width * 2 - 1).toFixed(3));
+      el.style.setProperty('--ty', ((e.clientY - r.top) / r.height * 2 - 1).toFixed(3));
+    });
+    el.addEventListener('pointerleave', () => {
+      el.style.setProperty('--tx', 0);
+      el.style.setProperty('--ty', 0);
+    });
+  });
+})();
+</script>
+</body>
+</html>

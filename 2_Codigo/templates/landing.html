@@ -16,7 +16,8 @@
 html:not(.lenis){scroll-behavior:smooth}
 html.lenis,html.lenis body{height:auto}
 .lenis.lenis-smooth{scroll-behavior:auto!important}
-html{background:#02040a;overflow-x:hidden}
+html{background:#02040a;overflow-x:clip}
+body{overflow-x:clip}
 html,body{margin:0;color:var(--tx);font:16px/1.6 Poppins,system-ui,"Segoe UI",sans-serif}
 body{cursor:default}
 a{color:inherit;text-decoration:none}
@@ -59,35 +60,37 @@ h1 .w.res>span{background:linear-gradient(100deg,#9fdcff 20%,#fff 45%,#9fdcff 70
 .acciones{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:34px;animation:sube 1s cubic-bezier(.2,.8,.2,1) backwards 1.15s}
 .insignias{display:flex;gap:10px;flex-wrap:wrap;animation:sube 1s cubic-bezier(.2,.8,.2,1) backwards 1.3s}
 .insignias span{font-size:.78rem;color:#a9bac4;padding:6px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04)}
-.escena{perspective:1100px;animation:aparece 1.2s cubic-bezier(.2,.8,.2,1) backwards .5s}
-.tarjeta{padding:26px;transform:rotateX(calc(var(--ry,0)*-9deg)) rotateY(calc(var(--rx,0)*11deg));transform-style:preserve-3d;will-change:transform}
+.escena{position:relative;width:100%;max-width:620px;justify-self:end;aspect-ratio:1/.9;margin-bottom:50px;animation:aparece 1.2s cubic-bezier(.2,.8,.2,1) backwards .5s}
+.halo{position:absolute;left:6%;right:-4%;top:6%;bottom:8%;border-radius:50%;background:radial-gradient(circle at 55% 45%,rgba(143,211,255,.38),rgba(143,211,255,.08) 55%,transparent 72%);filter:blur(30px);animation:pulsa 6s ease-in-out infinite;translate:calc(var(--bx,0)*-18px) calc(var(--by,0)*-12px)}
+.personajes{position:absolute;right:-2%;top:0;width:100%;height:auto;pointer-events:none;user-select:none;filter:drop-shadow(0 34px 44px rgba(0,0,0,.6));transform:perspective(1000px) translate3d(calc(var(--bx,0)*16px),calc(var(--by,0)*10px),0) rotateY(calc(var(--bx,0)*8deg)) rotateX(calc(var(--by,0)*-5deg));will-change:transform}
+.tarjeta{position:absolute;left:-16%;bottom:-12%;width:72%;padding:16px;transform:perspective(1000px) rotateX(calc(var(--ry,0)*-7deg)) rotateY(calc(var(--rx,0)*9deg));translate:calc(var(--bx,0)*-14px) calc(var(--by,0)*-9px);will-change:transform;z-index:3}
 .tarjeta .cab{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
 .perfil{display:flex;align-items:center;gap:12px}
 .perfil .av{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,rgba(255,255,255,.35),rgba(120,160,190,.4));font-weight:600;font-size:.85rem}
 .perfil b{display:block;font-size:.95rem;line-height:1.2}
 .perfil small{color:var(--mut);font-size:.76rem}
 .etq{padding:5px 14px;border-radius:999px;font-size:.78rem;font-weight:600;color:#86efac;background:rgba(34,197,94,.14);border:1px solid rgba(34,197,94,.4)}
-.medidor{display:grid;grid-template-columns:150px minmax(0,1fr);gap:22px;align-items:center}
-.medidor svg{width:150px;height:150px;transform:rotate(-90deg)}
+.medidor{display:grid;grid-template-columns:116px minmax(0,1fr);gap:18px;align-items:center}
+.medidor svg{width:116px;height:116px;transform:rotate(-90deg)}
 .medidor circle{fill:none;stroke-width:11;stroke-linecap:round}
 .medidor .pista{stroke:rgba(255,255,255,.12)}
 .medidor .valor{stroke:url(#g-med);stroke-dasharray:339.3;stroke-dashoffset:339.3;transition:stroke-dashoffset 2s cubic-bezier(.2,.8,.2,1) .6s;filter:drop-shadow(0 0 8px rgba(159,220,255,.6))}
 .escena.in .medidor .valor{stroke-dashoffset:27}
 .centro{position:absolute;inset:0;display:grid;place-items:center;text-align:center;line-height:1.1}
-.centro strong{font-size:2.1rem;font-weight:700}
+.centro strong{font-size:1.6rem;font-weight:700}
 .centro small{display:block;color:var(--mut);font-size:.7rem}
-.gauge{position:relative;width:150px;height:150px}
+.gauge{position:relative;width:116px;height:116px}
 .factores{display:grid;gap:12px}
 .fa{font-size:.8rem}
 .fa div{display:flex;justify-content:space-between;margin-bottom:5px;color:#d3dee5}
 .fa>span{display:block;height:7px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden}
 .fa i{display:block;height:100%;width:var(--v);border-radius:4px;background:linear-gradient(90deg,#5fb4e6,#fff);transform:scaleX(0);transform-origin:left;transition:transform 1.6s cubic-bezier(.2,.8,.2,1) .9s}
 .escena.in .fa i{transform:scaleX(1)}
-.pie{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;gap:10px;font-size:.74rem;color:var(--mut)}
-.flota{position:absolute;padding:10px 16px;border-radius:18px;font-size:.8rem;font-weight:500;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 14px 36px rgba(0,0,0,.45);transform:translateZ(70px);animation:bob 5s ease-in-out infinite}
+.pie{margin-top:12px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;gap:10px;font-size:.74rem;color:var(--mut)}
+.flota{position:absolute;padding:10px 16px;border-radius:18px;font-size:.8rem;font-weight:500;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 14px 36px rgba(0,0,0,.45);transform:translate3d(calc(var(--bx,0)*-26px),calc(var(--by,0)*-16px),0);animation:bob 5s ease-in-out infinite}
 .flota svg{width:18px;height:18px;fill:none;stroke:var(--hielo);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.flota.a{top:-22px;right:-14px}
-.flota.b{bottom:-24px;left:-20px;animation-delay:-2s}
+.flota.a{top:2%;right:-1%;z-index:4}
+.flota.b{bottom:24%;right:-3%;animation-delay:-2s;z-index:4}
 .relativo{position:relative}
 section{width:min(1240px,calc(100% - 40px));margin:0 auto;padding:90px 0}
 .titulo{max-width:680px;margin-bottom:46px}
@@ -110,21 +113,41 @@ section{width:min(1240px,calc(100% - 40px));margin:0 auto;padding:90px 0}
 .fac{padding:26px 24px;transition:translate .45s cubic-bezier(.2,.8,.2,1),opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}
 .fac:hover{translate:0 -6px}
 .fac em{display:inline-block;margin-top:14px;font-style:normal;font-size:.76rem;padding:4px 12px;border-radius:999px;color:var(--hielo);background:rgba(159,220,255,.1);border:1px solid rgba(159,220,255,.25)}
-.expande{width:100%;padding:0}
-.expande .titulo{width:min(1240px,calc(100% - 40px));margin:0 auto;padding:90px 0 40px}
-.escenario{position:relative;display:grid;place-items:center;padding:0 20px 90px}
-.marco{position:relative;margin:0;width:min(1100px,100%);aspect-ratio:16/10;border-radius:32px;overflow:hidden;border:1px solid rgba(255,255,255,.22);box-shadow:0 40px 120px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.3);background:#05080d}
-.marco img,.foto img{display:block;width:100%;height:100%;object-fit:cover;object-position:top center;will-change:transform}
-.marco::after,.foto::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,transparent 50%,rgba(2,4,10,.82))}
-.marco figcaption,.foto figcaption{position:absolute;z-index:2;left:clamp(18px,4vw,56px);right:clamp(18px,4vw,56px);bottom:clamp(18px,5vh,48px)}
-.marco figcaption b,.foto figcaption b{display:block;font-size:clamp(1.4rem,3.4vw,2.8rem);line-height:1.1;letter-spacing:-.03em;font-weight:700}
-.marco figcaption span,.foto figcaption span{display:block;margin-top:8px;max-width:560px;color:#c3d0d8;font-weight:300;font-size:clamp(.9rem,1.4vw,1.1rem)}
-.galeria{display:grid;gap:30px}
-.foto{position:relative;margin:0;border-radius:32px;overflow:hidden;aspect-ratio:16/8;border:1px solid rgba(255,255,255,.2);box-shadow:0 30px 90px rgba(0,0,0,.6);background:#05080d}
-html.gs .escenario{height:100vh;padding:0}
-html.gs .marco{width:46vw;height:54vh;aspect-ratio:auto}
-html.gs .marco figcaption{opacity:0}
-@media (max-width:760px){html.gs .marco{width:86vw;height:44vh}.foto{aspect-ratio:4/3}}
+.c3d,.p3d{transform-style:preserve-3d}
+.escena3d{position:relative;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);align-items:center;gap:clamp(24px,5vw,80px);perspective:1500px}
+.cv3d{position:relative;justify-self:center;width:min(400px,100%);transform:rotateY(calc(var(--bx,0)*9deg)) rotateX(calc(var(--by,0)*-6deg));transform-style:preserve-3d}
+.cv-in{position:relative;transform-style:preserve-3d;transform:rotateY(-14deg) rotateX(5deg)}
+.cv-in img{display:block;width:100%;height:auto;filter:drop-shadow(0 40px 50px rgba(0,0,0,.6));user-select:none}
+.cv-aura{position:absolute;inset:-14% -26%;background:radial-gradient(circle,rgba(143,211,255,.32),transparent 62%);filter:blur(34px);pointer-events:none}
+.cv-in svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.cv-in path{fill:none;stroke:#1d8fe0;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:80;stroke-dashoffset:0}
+.cv-etq{position:absolute;right:-14%;bottom:12%;transform:translateZ(80px);padding:10px 18px;border-radius:18px;font-size:.82rem;font-weight:600;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 14px 36px rgba(0,0,0,.45)}
+.pasos-lista{list-style:none;margin:0;padding:0;display:grid;gap:16px}
+.pa{display:grid;grid-template-columns:54px minmax(0,1fr);gap:18px;align-items:center;padding:20px 22px;border-radius:24px;background:linear-gradient(150deg,rgba(255,255,255,.1),rgba(255,255,255,.03)),rgba(6,10,16,.4);border:1px solid rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 14px 40px rgba(0,0,0,.4);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+.pa .n{display:grid;place-items:center;width:54px;height:54px;border-radius:50%;font-weight:700;font-size:1.2rem;color:#06121a;background:linear-gradient(135deg,#fff,#8fb4c9);box-shadow:0 0 24px rgba(159,220,255,.4)}
+.pa h3{margin:0 0 4px;font-size:1.12rem;font-weight:600}
+.pa p{margin:0;color:#aebdc7;font-size:.92rem;font-weight:300}
+.rejilla-r{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;perspective:1600px}
+.carrera,.portal{position:relative;height:100%;border-radius:28px;padding:28px 26px;background:linear-gradient(150deg,rgba(255,255,255,.12),rgba(255,255,255,.035)),rgba(6,10,16,.4);border:1px solid rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 24px 60px rgba(0,0,0,.5);-webkit-backdrop-filter:blur(20px) saturate(150%);backdrop-filter:blur(20px) saturate(150%);overflow:hidden;transform:perspective(900px) rotateX(calc(var(--ty,0)*-8deg)) rotateY(calc(var(--tx,0)*10deg));transition:transform .25s ease-out}
+.carrera::before,.portal::before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:radial-gradient(320px circle at var(--cx,50%) var(--cy,-20%),rgba(190,230,255,.18),transparent 60%)}
+.carrera>*,.portal>*{position:relative}
+.carrera h3,.portal h3{margin:0 0 6px;font-size:1.25rem;font-weight:600;letter-spacing:-.01em}
+.carrera .lab{display:block;margin:16px 0 8px;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--hielo);font-weight:600}
+.carrera ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.carrera li{padding:5px 12px;border-radius:999px;font-size:.8rem;color:#dbe7ee;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16)}
+.carrera p{margin:0;color:#aebdc7;font-size:.9rem;font-weight:300}
+.nota-r{margin:26px 0 0;color:var(--mut);font-size:.82rem}
+.tipos{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 30px}
+.tipos span{padding:8px 18px;border-radius:999px;font-size:.88rem;font-weight:500;color:#e8f0f5;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.rejilla-p{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;perspective:1600px}
+.portal{display:flex;flex-direction:column;gap:10px}
+.portal p{margin:0;color:#aebdc7;font-size:.9rem;font-weight:300;flex:1}
+.portal .ir{display:inline-flex;align-items:center;gap:8px;margin-top:8px;font-weight:600;font-size:.9rem;color:var(--hielo)}
+.portal .ir svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s}
+.portal:hover .ir svg{transform:translate(4px,-4px)}
+@media (max-width:1100px){.rejilla-p{grid-template-columns:1fr 1fr}.rejilla-r{grid-template-columns:1fr 1fr}}
+@media (max-width:899px){.escena3d{grid-template-columns:1fr}.cv3d{width:min(300px,80%)}.cv-etq{right:-6%}}
+@media (max-width:640px){.rejilla-r,.rejilla-p{grid-template-columns:1fr}}
 .cinta{overflow:hidden;padding:20px 0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
 .cinta div{display:flex;gap:14px;width:max-content;animation:cinta 34s linear infinite}
 .cinta:hover div{animation-play-state:paused}
@@ -138,6 +161,7 @@ footer b{color:#dfe8ee}
 .rv.in{opacity:1;transform:none}
 .cortina{position:fixed;inset:0;z-index:100;pointer-events:none;background:radial-gradient(circle at 50% 40%,#17222c,#02040a);clip-path:circle(0 at var(--ox,50%) var(--oy,50%));transition:clip-path .85s cubic-bezier(.7,0,.2,1)}
 .cortina.on{clip-path:circle(150% at var(--ox,50%) var(--oy,50%))}
+@keyframes pulsa{0%,100%{opacity:.75;scale:1}50%{opacity:1;scale:1.07}}
 @keyframes deriva{from{scale:1.04}to{scale:1.1}}
 @keyframes baja{from{opacity:0;transform:translate(-50%,-40px)}to{opacity:1;transform:translateX(-50%)}}
 @keyframes palabra{from{transform:translateY(115%) rotate(4deg);opacity:0}to{transform:none;opacity:1}}
@@ -148,8 +172,8 @@ footer b{color:#dfe8ee}
 @keyframes bob{0%,100%{translate:0 0}50%{translate:0 -12px}}
 @keyframes latido{70%{box-shadow:0 0 0 9px rgba(110,231,160,0)}100%{box-shadow:0 0 0 0 rgba(110,231,160,0)}}
 @keyframes cinta{to{transform:translateX(-50%)}}
-@media (max-width:980px){header.hero{grid-template-columns:1fr;padding-top:120px}.cifras{grid-template-columns:1fr 1fr}.rejilla3,.rejilla6{grid-template-columns:1fr 1fr}.enlaces{display:none}}
-@media (max-width:640px){.rejilla3,.rejilla6{grid-template-columns:1fr}.medidor{grid-template-columns:1fr;justify-items:center}.cifras{grid-template-columns:1fr 1fr}.final{padding:50px 22px}nav.barra{padding-left:16px}.flota.a{right:0}.flota.b{left:0}section{padding:64px 0}}
+@media (max-width:980px){header.hero{grid-template-columns:1fr;padding-top:120px}.escena{justify-self:center;max-width:520px;margin-top:20px}.cifras{grid-template-columns:1fr 1fr}.rejilla3,.rejilla6{grid-template-columns:1fr 1fr}.enlaces{display:none}}
+@media (max-width:640px){.escena{aspect-ratio:auto;display:flex;flex-direction:column;margin-bottom:30px}.personajes{position:relative;right:auto;width:94%;margin:0 auto}.tarjeta{position:relative;left:auto;bottom:auto;width:100%;margin-top:-56px;padding:16px;translate:none}.flota{font-size:.72rem;padding:8px 12px}.flota.b{display:none}.rejilla3,.rejilla6{grid-template-columns:1fr}.medidor{grid-template-columns:1fr;justify-items:center}.cifras{grid-template-columns:1fr 1fr}.final{padding:50px 22px}nav.barra{padding-left:16px}.flota.a{right:0}.flota.b{left:auto;right:0}section{padding:64px 0}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}.fa i{transform:none}.medidor .valor{stroke-dashoffset:27}h1 .w>span{opacity:1}}
 </style>
 </head>
@@ -162,7 +186,7 @@ footer b{color:#dfe8ee}
 
 <nav class="barra" id="barra">
 <a class="marca" href="/"><b><svg viewBox="0 0 24 24"><path d="M9.5 3a3.5 3.5 0 0 0-3.4 4.3A3.5 3.5 0 0 0 5 14a3.5 3.5 0 0 0 4.5 4.8V3zM14.5 3a3.5 3.5 0 0 1 3.4 4.3A3.5 3.5 0 0 1 19 14a3.5 3.5 0 0 1-4.5 4.8V3z"/></svg></b><span>Emplea<em>360</em></span></a>
-<div class="enlaces"><a href="#como">Cómo funciona</a><a href="#factores">Factores</a><a href="#modulos">Módulos</a></div>
+<div class="enlaces"><a href="#como">Cómo funciona</a><a href="#empezar">Empezar</a><a href="#carreras">Carreras</a><a href="#ofertas">Ofertas</a></div>
 <a class="btn chico" href="/sistema" data-entrar>Entrar<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
 </nav>
 
@@ -178,6 +202,8 @@ footer b{color:#dfe8ee}
 <div class="insignias"><span>Sube tu Excel o CSV</span><span>Resultado al instante</span><span>Recomendaciones para ti</span></div>
 </div>
 <div class="escena relativo" id="escena">
+<div class="halo"></div>
+<img class="personajes" src="{{ url_for('static', filename='equipo.webp') }}" alt="Dos profesionales sonrientes con una laptop" width="1100" height="927">
 <div class="tarjeta vidrio" id="tarjeta">
 <div class="cab"><div class="perfil"><span class="av">TÚ</span><div><b>Tu resultado</b><small>Ejemplo de vista previa</small></div></div><span class="etq">Competitividad Alta</span></div>
 <div class="medidor">
@@ -224,21 +250,40 @@ footer b{color:#dfe8ee}
 </div>
 </section>
 
-<section class="expande" id="pantallas">
-<div class="titulo rv"><small>Por dentro</small><h2>Así se ve el sistema cuando lo abres.</h2><p>Desliza y la pantalla se abre: un panel, un formulario y un resultado listos para usar.</p></div>
-<div class="escenario">
-<figure class="marco">
-<img src="{{ url_for('static', filename='captura-panel.jpg') }}" alt="Panel de control de Emplea360" loading="lazy">
-<figcaption><b>Todo el sistema en una sola pantalla</b><span>Indicadores, distribución de competitividad y hallazgos del modelo al instante.</span></figcaption>
-</figure>
+<section class="empezar" id="empezar">
+<div class="titulo rv"><small>Tu primer empleo</small><h2>Cómo empezar a trabajar.</h2><p>Cuatro pasos para pasar de estudiante a candidato, aunque aún no tengas experiencia.</p></div>
+<div class="escena3d" id="pasos3d">
+<div class="cv3d"><div class="cv-aura"></div><div class="cv-in"><img src="{{ url_for('static', filename='cv.webp') }}" alt="Hoja de currículum con foto y lista de verificación" width="800" height="1231" loading="lazy"><svg viewBox="0 0 800 1231" aria-hidden="true"><path class="tk" d="M664 554L680 570L708 534"/><path class="tk" d="M664 664L680 680L708 644"/><path class="tk" d="M664 774L680 790L708 754"/><path class="tk" d="M664 884L680 900L708 864"/><path class="tk" d="M664 994L680 1010L708 974"/></svg><span class="cv-etq">Tu CV, listo</span></div></div>
+<ol class="pasos-lista">
+<li class="pa"><span class="n">1</span><div><h3>Arma tu CV</h3><p>Una página, datos de contacto, formación, proyectos y habilidades. Usa tus resultados de Emplea360 para saber qué destacar.</p></div></li>
+<li class="pa"><span class="n">2</span><div><h3>Crea tu perfil profesional</h3><p>Completa tu perfil en LinkedIn y reúne tus trabajos del curso en un portafolio sencillo.</p></div></li>
+<li class="pa"><span class="n">3</span><div><h3>Busca prácticas y primeras ofertas</h3><p>Empieza por prácticas preprofesionales y programas para recién egresados en portales de empleo y en la bolsa de trabajo de tu universidad.</p></div></li>
+<li class="pa"><span class="n">4</span><div><h3>Postula y prepara la entrevista</h3><p>Ensaya cómo presentarte, cuenta tus proyectos con ejemplos y refuerza las habilidades que el sistema te recomienda.</p></div></li>
+</ol>
 </div>
 </section>
 
-<section id="recorrido">
-<div class="titulo rv"><small>Del dato al plan</small><h2>Ingresa, conoce y mejora.</h2><p>Cada imagen se abre a medida que avanzas.</p></div>
-<div class="galeria">
-<figure class="foto"><img src="{{ url_for('static', filename='captura-evaluar.jpg') }}" alt="Formulario para ingresar tus notas" loading="lazy"><figcaption><b>Ingresa tus notas</b><span>Completa tus datos o sube tu archivo de Excel.</span></figcaption></figure>
-<figure class="foto"><img src="{{ url_for('static', filename='captura-resultado.jpg') }}" alt="Resultado de la predicción con perfil comparado" loading="lazy"><figcaption><b>Conoce tu probabilidad</b><span>Tu nivel de competitividad, tu perfil comparado y recomendaciones para mejorar.</span></figcaption></figure>
+<section id="carreras">
+<div class="titulo rv"><small>Según tu carrera</small><h2>En qué ramas puedes trabajar.</h2><p>Un punto de partida para explorar: cada carrera abre varios caminos y los primeros puestos suelen ser prácticas o cargos de asistente y analista junior.</p></div>
+<div class="rejilla-r">
+<div class="c3d"><article class="carrera"><h3>Sistemas e Inteligencia Artificial</h3><span class="lab">Ramas</span><ul><li>Desarrollo de software</li><li>Ciencia de datos</li><li>Ciberseguridad</li><li>Soporte y redes</li><li>Gestión de proyectos TI</li></ul><span class="lab">Primeros puestos</span><p>Practicante de desarrollo, analista de datos junior, soporte técnico.</p></article></div>
+<div class="c3d"><article class="carrera"><h3>Administración y Negocios</h3><span class="lab">Ramas</span><ul><li>Gestión comercial</li><li>Recursos humanos</li><li>Logística y operaciones</li><li>Emprendimiento</li><li>Consultoría</li></ul><span class="lab">Primeros puestos</span><p>Asistente administrativo, analista comercial, practicante de RR. HH.</p></article></div>
+<div class="c3d"><article class="carrera"><h3>Contabilidad y Finanzas</h3><span class="lab">Ramas</span><ul><li>Auditoría</li><li>Tributación</li><li>Banca y seguros</li><li>Análisis financiero</li><li>Tesorería</li></ul><span class="lab">Primeros puestos</span><p>Asistente contable, auxiliar de auditoría, analista de créditos junior.</p></article></div>
+<div class="c3d"><article class="carrera"><h3>Ingeniería Industrial</h3><span class="lab">Ramas</span><ul><li>Producción</li><li>Calidad</li><li>Cadena de suministro</li><li>Mejora continua</li><li>Seguridad y salud ocupacional</li></ul><span class="lab">Primeros puestos</span><p>Practicante de planta, analista de procesos, asistente de calidad.</p></article></div>
+<div class="c3d"><article class="carrera"><h3>Marketing y Comunicación</h3><span class="lab">Ramas</span><ul><li>Marketing digital</li><li>Contenido y redes</li><li>Publicidad</li><li>Relaciones públicas</li><li>Investigación de mercado</li></ul><span class="lab">Primeros puestos</span><p>Asistente de marketing, community manager junior, analista de redes.</p></article></div>
+<div class="c3d"><article class="carrera"><h3>Derecho</h3><span class="lab">Ramas</span><ul><li>Estudio jurídico</li><li>Asesoría corporativa</li><li>Cumplimiento normativo</li><li>Sector público</li><li>Notarial y registral</li></ul><span class="lab">Primeros puestos</span><p>Asistente legal, practicante en estudio jurídico, analista de cumplimiento junior.</p></article></div>
+</div>
+<p class="nota-r">Información orientativa: los cargos y requisitos varían según la empresa, la ciudad y el momento del mercado.</p>
+</section>
+
+<section id="ofertas">
+<div class="titulo rv"><small>Ofertas laborales</small><h2>Dónde buscar tu primera oportunidad.</h2><p>Estos portales reúnen ofertas de empleo y prácticas en Perú. Filtra por tu carrera y por nivel de ingreso o practicante.</p></div>
+<div class="tipos rv"><span>Prácticas preprofesionales</span><span>Programas para recién egresados</span><span>Proyectos freelance</span><span>Primer empleo</span></div>
+<div class="rejilla-p">
+<div class="p3d"><a class="portal" href="https://www.linkedin.com/jobs/" target="_blank" rel="noopener"><h3>LinkedIn Empleos</h3><p>Ofertas de empresas y contacto directo con reclutadores. Ideal para armar tu perfil y postular con un clic.</p><span class="ir">Ir al portal<svg viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a></div>
+<div class="p3d"><a class="portal" href="https://www.bumeran.com.pe/" target="_blank" rel="noopener"><h3>Bumeran</h3><p>Portal de empleo con filtros por área, ciudad y nivel. Útil para primeras ofertas y puestos junior.</p><span class="ir">Ir al portal<svg viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a></div>
+<div class="p3d"><a class="portal" href="https://pe.computrabajo.com/" target="_blank" rel="noopener"><h3>Computrabajo</h3><p>Gran volumen de ofertas en todo el país, con búsqueda por carrera y por ciudad.</p><span class="ir">Ir al portal<svg viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a></div>
+<div class="p3d"><a class="portal" href="https://pe.indeed.com/" target="_blank" rel="noopener"><h3>Indeed</h3><p>Buscador que reúne ofertas de muchos sitios. Crea alertas para enterarte de nuevas publicaciones.</p><span class="ir">Ir al portal<svg viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a></div>
 </div>
 </section>
 
@@ -403,20 +448,40 @@ footer b{color:#dfe8ee}
 (function () {
   if (!window.gsap || !window.ScrollTrigger || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   gsap.registerPlugin(ScrollTrigger);
-  document.documentElement.classList.add('gs');
-  const movil = () => innerWidth < 760;
+  const mm = gsap.matchMedia();
 
-  gsap.timeline({
-    scrollTrigger: {trigger: '.escenario', start: 'top top', end: '+=140%', scrub: 0.8, pin: true, anticipatePin: 1, invalidateOnRefresh: true}
-  })
-    .fromTo('.marco', {width: () => movil() ? '86vw' : '46vw', height: () => movil() ? '44vh' : '54vh', borderRadius: 36}, {width: '100%', height: '100vh', borderRadius: 0, ease: 'power2.inOut', duration: 1}, 0)
-    .fromTo('.marco img', {scale: 1.3}, {scale: 1, ease: 'power2.inOut', duration: 1}, 0)
-    .fromTo('.marco figcaption', {opacity: 0, y: 60}, {opacity: 1, y: 0, ease: 'power2.out', duration: 0.35}, 0.65);
+  mm.add('(min-width: 900px)', () => {
+    const pasos = gsap.utils.toArray('.pa');
+    const ticks = gsap.utils.toArray('.tk');
+    gsap.set(pasos, {opacity: 0.25, x: 60});
+    gsap.set(ticks, {strokeDashoffset: 80});
+    const tl = gsap.timeline({scrollTrigger: {trigger: '#pasos3d', start: 'top 14%', end: '+=280%', scrub: 1, pin: true, anticipatePin: 1}});
+    tl.fromTo('.cv-in', {rotateY: -75, rotateX: 28, scale: 0.65, opacity: 0.1}, {rotateY: -14, rotateX: 5, scale: 1, opacity: 1, duration: 1.2, ease: 'power3.out'});
+    pasos.forEach((p, i) => {
+      tl.to(p, {opacity: 1, x: 0, duration: 0.6, ease: 'power2.out'}, '>')
+        .to('.cv-in', {rotateY: i % 2 ? 18 : -22, rotateX: 4 + i * 3, scale: 1 + i * 0.03, duration: 0.9, ease: 'power1.inOut'}, '<')
+        .to(ticks[i], {strokeDashoffset: 0, duration: 0.5, ease: 'power1.out'}, '<0.25');
+      if (i < pasos.length - 1) tl.to(p, {opacity: 0.55, duration: 0.3}, '>0.2');
+    });
+    tl.to(ticks[4], {strokeDashoffset: 0, duration: 0.5}, '>')
+      .to(pasos, {opacity: 1, duration: 0.3}, '<')
+      .to('.cv-in', {rotateY: -8, rotateX: 3, scale: 1.04, duration: 0.8, ease: 'power2.inOut'}, '<');
+  });
 
-  gsap.utils.toArray('.foto').forEach(f => {
-    gsap.fromTo(f, {clipPath: 'inset(16% 14% 16% 14% round 56px)'}, {clipPath: 'inset(0% 0% 0% 0% round 32px)', ease: 'none', scrollTrigger: {trigger: f, start: 'top 95%', end: 'top 25%', scrub: true}});
-    gsap.fromTo(f.querySelector('img'), {scale: 1.35, yPercent: -5}, {scale: 1, yPercent: 5, ease: 'none', scrollTrigger: {trigger: f, start: 'top bottom', end: 'bottom top', scrub: true}});
-    gsap.fromTo(f.querySelector('figcaption'), {opacity: 0, y: 40}, {opacity: 1, y: 0, ease: 'power2.out', scrollTrigger: {trigger: f, start: 'top 55%', end: 'top 25%', scrub: true}});
+  mm.add('(max-width: 899px)', () => {
+    gsap.fromTo('.cv-in', {rotateY: -70, rotateX: 25, scale: 0.7, opacity: 0.1}, {rotateY: -10, rotateX: 4, scale: 1, opacity: 1, ease: 'none', scrollTrigger: {trigger: '.cv3d', start: 'top 95%', end: 'top 35%', scrub: 1}});
+    gsap.utils.toArray('.pa').forEach(p => {
+      gsap.fromTo(p, {opacity: 0, x: 60, rotateY: -35}, {opacity: 1, x: 0, rotateY: 0, ease: 'none', scrollTrigger: {trigger: p, start: 'top 95%', end: 'top 65%', scrub: 1}});
+    });
+  });
+
+  gsap.utils.toArray('.c3d').forEach((el, i) => {
+    gsap.fromTo(el, {rotateX: -75, y: 150, z: -300, opacity: 0, transformOrigin: '50% 100%'}, {rotateX: 0, y: 0, z: 0, opacity: 1, ease: 'power3.out', scrollTrigger: {trigger: el, start: 'top 96%', end: 'top 55%', scrub: 1}});
+  });
+
+  gsap.utils.toArray('.p3d').forEach((el, i) => {
+    const lado = i % 2 ? 1 : -1;
+    gsap.fromTo(el, {rotateY: lado * 70, x: lado * 140, z: -240, opacity: 0, transformOrigin: lado < 0 ? '0% 50%' : '100% 50%'}, {rotateY: 0, x: 0, z: 0, opacity: 1, ease: 'power3.out', scrollTrigger: {trigger: el, start: 'top 96%', end: 'top 58%', scrub: 1}});
   });
 
   gsap.utils.toArray('.titulo h2').forEach(h => {
@@ -424,6 +489,22 @@ footer b{color:#dfe8ee}
   });
 
   addEventListener('load', () => ScrollTrigger.refresh());
+})();
+</script>
+<script>
+(function () {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('.carrera, .portal').forEach(el => {
+    el.addEventListener('pointermove', e => {
+      const r = el.getBoundingClientRect();
+      el.style.setProperty('--tx', ((e.clientX - r.left) / r.width * 2 - 1).toFixed(3));
+      el.style.setProperty('--ty', ((e.clientY - r.top) / r.height * 2 - 1).toFixed(3));
+    });
+    el.addEventListener('pointerleave', () => {
+      el.style.setProperty('--tx', 0);
+      el.style.setProperty('--ty', 0);
+    });
+  });
 })();
 </script>
 </body>
