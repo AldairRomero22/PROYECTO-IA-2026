@@ -210,7 +210,7 @@ def test_sin_carrera_se_estima_por_las_habilidades(cliente):
     r = cliente.post('/predecir', data={'GPA': 6, 'Programming_Skill': 9, 'Communication_Skill': 3,
                                         'Teamwork': 3, 'Internship_Count': 1, 'Industry_Exposure': 2})
     html = r.get_data(as_text=True)
-    assert 'Carrera estimada por tus habilidades' in html
+    assert 'Carrera detectada' in html
     assert 'Ingeniería de Sistemas e IA' in html
 
 
@@ -218,4 +218,4 @@ def test_archivo_con_columna_carrera(cliente):
     csv = ('Estudiante,GPA,Programming_Skill,Communication_Skill,Teamwork,Internship_Count,Industry_Exposure,Carrera\n'
            'Ana,8,5,5,5,2,5,Psicología\n')
     html = subir(cliente, csv.encode(), 'ana.csv').get_data(as_text=True)
-    assert 'Carrera: <b>Psicología</b>' in html
+    assert '<span>Carrera</span><b>Psicología</b>' in html

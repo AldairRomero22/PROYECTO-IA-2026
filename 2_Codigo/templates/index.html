@@ -87,7 +87,7 @@ svg text{fill:var(--tx);font-family:Poppins,system-ui,sans-serif}
 .acciones .boton{padding:16px;font-size:1rem}
 .err{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.4);color:#fecaca;border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:.88rem}
 .err ul{margin:6px 0 0;padding-left:18px}
-.res{display:grid;grid-template-columns:minmax(260px,1fr) 1.3fr;gap:16px;margin-bottom:16px}
+.res{display:grid;grid-template-columns:minmax(300px,1.25fr) 1fr;gap:16px;margin-bottom:16px}
 .sello{display:inline-flex;align-items:center;gap:10px;padding:10px 20px;border-radius:999px;font-weight:700;font-size:1.25rem;color:#fff;margin:6px 0 18px}
 .sello.Low,.tag.Low{background:rgba(239,68,68,.18);color:#fca5a5;border:1px solid rgba(239,68,68,.45)}
 .sello.Medium,.tag.Medium{background:rgba(245,183,10,.16);color:#fcd34d;border:1px solid rgba(245,183,10,.45)}
@@ -110,14 +110,21 @@ svg text{fill:var(--tx);font-family:Poppins,system-ui,sans-serif}
 .col{display:flex;flex-direction:column;gap:16px;min-width:0}
 .col>.card{margin:0}
 .empresas{display:flex;flex-direction:column;gap:10px;margin-top:14px}
-.empresa{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:14px;border:1px solid var(--bd);background:rgba(255,255,255,.04)}
-.empresa>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
-.empresa h4{margin:0;font-size:.98rem}
-.empresa small{color:var(--mut);font-size:.78rem}
-.empresa .boton{padding:8px 14px;font-size:.82rem;text-decoration:none;white-space:nowrap}
-.emp-logo{position:relative;flex:none;width:46px;height:46px;border-radius:12px;background:#fff;display:grid;place-items:center;overflow:hidden}
-.emp-logo b{color:#0b1220;font-size:1.1rem}
-.emp-logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:7px;background:#fff}
+.empresa{display:grid;grid-template-columns:60px 1fr;gap:6px 16px;align-items:start;padding:18px;border-radius:16px;border:1px solid var(--bd);background:rgba(255,255,255,.04)}
+.emp-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.empresa h4{margin:0;font-size:1.08rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.rubro{padding:2px 10px;border-radius:999px;font-size:.7rem;font-weight:600;background:rgba(159,220,255,.14);border:1px solid rgba(159,220,255,.35);color:#cfeaff}
+.empresa strong{font-size:.92rem}
+.empresa p{margin:0;font-size:.84rem;line-height:1.5;color:#d6d9f5}
+.empresa small{color:var(--mut);font-size:.78rem;line-height:1.4}
+.empresa .boton{grid-column:2;justify-self:start;margin-top:6px;padding:9px 18px;font-size:.84rem;text-decoration:none;white-space:nowrap}
+.emp-logo{position:relative;flex:none;width:60px;height:60px;border-radius:14px;background:#fff;display:grid;place-items:center;overflow:hidden}
+.emp-logo b{color:#0b1220;font-size:1.3rem}
+.emp-logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:9px;background:#fff}
+.carrera-det{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0 16px;padding:10px 14px;border-radius:12px;border:1px solid rgba(159,220,255,.35);background:rgba(159,220,255,.1);font-size:.86rem}
+.carrera-det .ic{width:18px;height:18px;color:#9fdcff}
+.carrera-det span{color:var(--mut)}
+@media (max-width:560px){.empresa{grid-template-columns:48px 1fr}.emp-logo{width:48px;height:48px}.empresa .boton{grid-column:1/-1;justify-self:stretch;justify-content:center}}
 .carrera-campo{margin-top:16px}
 .carrera-campo select{max-width:420px}
 .rec{padding:18px}
@@ -426,6 +433,7 @@ html.vidrio .hero>svg [fill="#2f3a8f"]{fill:#2b3d4c}
 <h3>{{ alumno if alumno else 'Resultado de la predicción' }}</h3>
 <p class="sub">{% if nombre_archivo %}Leído de {{ nombre_archivo }} · {% endif %}Red neuronal MLP · probabilidad de cada nivel</p>
 <span class="sello {{ resultado.clase }}">Competitividad {{ resultado.nivel }}</span>
+<div class="carrera-det"><svg class="ic"><use href="#i-cap"/></svg><span>{{ 'Carrera' if resultado.ofertas.indicada else 'Carrera detectada' }}</span><b>{{ resultado.ofertas.carrera }}</b></div>
 {% for c, col, n in (('High','--ve','Alta'),('Medium','--am','Media'),('Low','--ro','Baja')) %}
 <div class="barra" style="--c:var({{ col }})"><div><span>{{ n }}</span><b>{{ (resultado.probabilidades[c]*100)|round(1) }} %</b></div><span><i style="width:{{ (resultado.probabilidades[c]*100)|round(1) }}%"></i></span></div>
 {% endfor %}
@@ -437,12 +445,17 @@ html.vidrio .hero>svg [fill="#2f3a8f"]{fill:#2b3d4c}
 </div>
 <div class="card">
 <h3>Empresas para tu carrera</h3>
-<p class="sub">{% if resultado.ofertas.indicada %}Carrera: <b>{{ resultado.ofertas.carrera }}</b>{% else %}Carrera estimada por tus habilidades: <b>{{ resultado.ofertas.carrera }}</b>. Indícala en el formulario para afinar las opciones.{% endif %} Para tu nivel: {{ resultado.ofertas.empresas[0].modalidad|lower }}.</p>
+<p class="sub">Empresas y puestos para <b>{{ resultado.ofertas.carrera }}</b>{% if not resultado.ofertas.indicada %}, detectada según tus habilidades. Indica tu carrera en el formulario para afinar las opciones{% endif %}. Para tu nivel: {{ resultado.ofertas.empresas[0].modalidad|lower }}.</p>
 <div class="empresas">
 {% for o in resultado.ofertas.empresas %}
 <div class="empresa">
 <span class="emp-logo"><img src="https://www.google.com/s2/favicons?domain={{ o.dominio }}&amp;sz=64" alt="" loading="lazy" onerror="this.remove()"><b>{{ o.empresa[0] }}</b></span>
-<div><h4>{{ o.empresa }}</h4><small>{{ o.puesto }}</small></div>
+<div class="emp-info">
+<h4>{{ o.empresa }}<span class="rubro">{{ o.rubro }}</span></h4>
+<strong>{{ o.puesto }}</strong>
+<p>{{ o.funciones }}</p>
+<small>Habilidades que piden: {{ o.habilidades }}</small>
+</div>
 <a class="boton" href="{{ o.enlace }}" target="_blank" rel="noopener"><svg class="ic"><use href="#i-upload"/></svg>Enviar CV</a>
 </div>
 {% endfor %}

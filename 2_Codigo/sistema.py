@@ -40,39 +40,78 @@ CONSEJOS = {'GPA': 'Reforzar el rendimiento académico: tutorías, grupos de est
             'Industry_Exposure': 'Acercarse al entorno laboral: charlas con empresas, ferias de empleo, visitas y mentorías con profesionales.'}
 
 CARRERAS = {
-    'Ingeniería de Sistemas e IA': ('Practicante de desarrollo, datos o infraestructura TI',
-        [('BCP', 'viabcp.com', 'https://www.viabcp.com/unete-al-equipo-bcp/talento-joven'),
-         ('Interbank', 'interbank.pe', 'https://pe.indeed.com/cmp/Interbank'),
-         ('Globant', 'globant.com', None), ('NTT DATA', 'nttdata.com', None)]),
-    'Administración y Negocios': ('Practicante de gestión comercial u operaciones',
-        [('Backus', 'backus.pe', 'https://pe.indeed.com/cmp/Backus'), ('Alicorp', 'alicorp.com.pe', None),
-         ('Falabella', 'falabella.com.pe', None), ('Supermercados Peruanos', 'spsa.pe', None)]),
-    'Contabilidad y Finanzas': ('Practicante contable, financiero o de auditoría',
-        [('BBVA', 'bbva.pe', None), ('Scotiabank', 'scotiabank.com.pe', None),
-         ('KPMG', 'kpmg.com', None), ('PwC', 'pwc.com', None)]),
-    'Marketing y Comunicación': ('Practicante de marketing, marca o comunicaciones',
-        [('Belcorp', 'belcorp.biz', None), ('Unilever', 'unilever.com', None),
-         ('Ripley', 'ripley.com.pe', None), ('Entel Perú', 'entel.pe', None)]),
-    'Ingeniería Industrial': ('Practicante de producción, calidad o logística',
-        [('Backus', 'backus.pe', 'https://pe.indeed.com/cmp/Backus'),
-         ('Cementos Pacasmayo', 'cementospacasmayo.com.pe', 'https://pe.indeed.com/cmp/Cementos-Pacasmayo'),
-         ('Alicorp', 'alicorp.com.pe', None), ('Grupo Gloria', 'grupogloria.com', None)]),
-    'Ingeniería Civil y Arquitectura': ('Practicante de obras, proyectos o diseño',
-        [('Cementos Pacasmayo', 'cementospacasmayo.com.pe', 'https://pe.indeed.com/cmp/Cementos-Pacasmayo'),
-         ('UNACEM', 'unacem.com.pe', None), ('AENZA', 'aenza.com', None), ('Cosapi', 'cosapi.com.pe', None)]),
-    'Ingeniería Agroindustrial': ('Practicante de procesos, calidad o producción agrícola',
-        [('Danper', 'danper.com', None), ('Camposol', 'camposol.com', 'https://pe.indeed.com/cmp/Camposol'),
-         ('Virú', 'viru.com.pe', None), ('Grupo Gloria', 'grupogloria.com', None)]),
-    'Derecho': ('Practicante legal o de asesoría jurídica',
-        [('SUNAT', 'sunat.gob.pe', 'https://talentoperu.servir.gob.pe'),
-         ('Poder Judicial', 'pj.gob.pe', 'https://talentoperu.servir.gob.pe'),
-         ('Ministerio Público', 'gob.pe', 'https://talentoperu.servir.gob.pe'), ('BCP', 'viabcp.com', 'https://www.viabcp.com/unete-al-equipo-bcp/talento-joven')]),
-    'Psicología': ('Practicante de recursos humanos y bienestar',
-        [('Backus', 'backus.pe', 'https://pe.indeed.com/cmp/Backus'), ('Alicorp', 'alicorp.com.pe', None),
-         ('Telefónica', 'telefonica.com.pe', None), ('Ripley', 'ripley.com.pe', None)]),
-    'Ciencias de la Salud': ('Practicante de salud, atención al paciente o gestión clínica',
-        [('Clínica Internacional', 'clinicainternacional.com.pe', None), ('Sanna Clínicas', 'sanna.pe', None),
-         ('EsSalud', 'essalud.gob.pe', None), ('MINSA', 'gob.pe', 'https://talentoperu.servir.gob.pe')])}
+    'Ingeniería de Sistemas e IA': {
+        'puesto': 'Practicante de Desarrollo y Datos',
+        'funciones': 'Apoya al equipo en programar y probar aplicaciones, preparar y analizar datos y automatizar procesos con código.',
+        'habilidades': 'Programación, lógica, bases de datos y trabajo en equipo',
+        'empresas': [('BCP', 'viabcp.com', 'https://www.viabcp.com/unete-al-equipo-bcp/talento-joven', 'Banca'),
+                     ('Interbank', 'interbank.pe', 'https://pe.indeed.com/cmp/Interbank', 'Banca y seguros'),
+                     ('Globant', 'globant.com', None, 'Tecnología y software'),
+                     ('NTT DATA', 'nttdata.com', None, 'Consultoría de TI')]},
+    'Administración y Negocios': {
+        'puesto': 'Practicante de Gestión Comercial y Operaciones',
+        'funciones': 'Colabora en el seguimiento de ventas, la elaboración de reportes de gestión y la coordinación con proveedores y áreas internas.',
+        'habilidades': 'Análisis, organización, Excel y comunicación',
+        'empresas': [('Backus', 'backus.pe', 'https://pe.indeed.com/cmp/Backus', 'Bebidas y consumo masivo'),
+                     ('Alicorp', 'alicorp.com.pe', None, 'Alimentos y consumo masivo'),
+                     ('Falabella', 'falabella.com.pe', None, 'Retail'),
+                     ('Supermercados Peruanos', 'spsa.pe', None, 'Supermercados')]},
+    'Contabilidad y Finanzas': {
+        'puesto': 'Practicante Contable y Financiero',
+        'funciones': 'Registra y concilia operaciones, apoya en el cierre contable, la elaboración de estados financieros y el análisis de costos.',
+        'habilidades': 'Contabilidad, Excel avanzado, atención al detalle y ética',
+        'empresas': [('BBVA', 'bbva.pe', None, 'Banca'), ('Scotiabank', 'scotiabank.com.pe', None, 'Banca'),
+                     ('KPMG', 'kpmg.com', None, 'Auditoría y consultoría'), ('PwC', 'pwc.com', None, 'Auditoría y consultoría')]},
+    'Marketing y Comunicación': {
+        'puesto': 'Practicante de Marketing y Marca',
+        'funciones': 'Apoya en campañas, contenido para redes, estudios de mercado y seguimiento de resultados de las acciones de marca.',
+        'habilidades': 'Comunicación, creatividad, redes sociales y análisis de datos',
+        'empresas': [('Belcorp', 'belcorp.biz', None, 'Cosmética y venta directa'), ('Unilever', 'unilever.com', None, 'Consumo masivo'),
+                     ('Ripley', 'ripley.com.pe', None, 'Retail'), ('Entel Perú', 'entel.pe', None, 'Telecomunicaciones')]},
+    'Ingeniería Industrial': {
+        'puesto': 'Practicante de Producción, Calidad y Logística',
+        'funciones': 'Participa en la mejora de procesos, el control de indicadores de calidad, la planificación de producción y el manejo de inventarios.',
+        'habilidades': 'Mejora continua, análisis de procesos, Excel y trabajo en planta',
+        'empresas': [('Backus', 'backus.pe', 'https://pe.indeed.com/cmp/Backus', 'Bebidas'),
+                     ('Cementos Pacasmayo', 'cementospacasmayo.com.pe', 'https://pe.indeed.com/cmp/Cementos-Pacasmayo', 'Cemento y construcción'),
+                     ('Alicorp', 'alicorp.com.pe', None, 'Alimentos'), ('Grupo Gloria', 'grupogloria.com', None, 'Lácteos y alimentos')]},
+    'Ingeniería Civil y Arquitectura': {
+        'puesto': 'Practicante de Obras y Proyectos',
+        'funciones': 'Apoya en el control de avance de obra, la revisión de planos y metrados, la supervisión en campo y la documentación del proyecto.',
+        'habilidades': 'Lectura de planos, AutoCAD o Revit, presupuestos y trabajo en campo',
+        'empresas': [('Cementos Pacasmayo', 'cementospacasmayo.com.pe', 'https://pe.indeed.com/cmp/Cementos-Pacasmayo', 'Cemento y construcción'),
+                     ('UNACEM', 'unacem.com.pe', None, 'Cemento'), ('AENZA', 'aenza.com', None, 'Infraestructura'),
+                     ('Cosapi', 'cosapi.com.pe', None, 'Construcción e ingeniería')]},
+    'Ingeniería Agroindustrial': {
+        'puesto': 'Practicante de Procesos y Calidad Agroindustrial',
+        'funciones': 'Colabora en el control de calidad de la fruta y hortalizas, el seguimiento de procesos de planta y la trazabilidad de la producción.',
+        'habilidades': 'Inocuidad alimentaria, control de calidad, procesos y trabajo en campo',
+        'empresas': [('Danper', 'danper.com', None, 'Agroexportación'),
+                     ('Camposol', 'camposol.com', 'https://pe.indeed.com/cmp/Camposol', 'Agroexportación'),
+                     ('Virú', 'viru.com.pe', None, 'Conservas y agroindustria'), ('Grupo Gloria', 'grupogloria.com', None, 'Lácteos y azúcar')]},
+    'Derecho': {
+        'puesto': 'Practicante Legal',
+        'funciones': 'Revisa expedientes y contratos, redacta escritos y borradores de documentos, y hace seguimiento de plazos y trámites.',
+        'habilidades': 'Redacción jurídica, investigación normativa, reserva y orden',
+        'empresas': [('SUNAT', 'sunat.gob.pe', 'https://talentoperu.servir.gob.pe', 'Entidad pública tributaria'),
+                     ('Poder Judicial', 'pj.gob.pe', 'https://talentoperu.servir.gob.pe', 'Entidad pública'),
+                     ('Ministerio Público', 'gob.pe', 'https://talentoperu.servir.gob.pe', 'Entidad pública'),
+                     ('BCP', 'viabcp.com', 'https://www.viabcp.com/unete-al-equipo-bcp/talento-joven', 'Banca y asesoría legal')]},
+    'Psicología': {
+        'puesto': 'Practicante de Recursos Humanos y Bienestar',
+        'funciones': 'Apoya en reclutamiento y selección, evaluaciones de personal, clima laboral y actividades de bienestar y capacitación.',
+        'habilidades': 'Entrevistas, evaluación psicológica, empatía y comunicación',
+        'empresas': [('Backus', 'backus.pe', 'https://pe.indeed.com/cmp/Backus', 'Bebidas y consumo masivo'),
+                     ('Alicorp', 'alicorp.com.pe', None, 'Alimentos'), ('Telefónica', 'telefonica.com.pe', None, 'Telecomunicaciones'),
+                     ('Ripley', 'ripley.com.pe', None, 'Retail')]},
+    'Ciencias de la Salud': {
+        'puesto': 'Practicante de Salud y Atención al Paciente',
+        'funciones': 'Asiste en la atención y el seguimiento de pacientes, el registro de historias clínicas y el apoyo a los equipos asistenciales.',
+        'habilidades': 'Trato humano, protocolos de bioseguridad, orden y trabajo en equipo',
+        'empresas': [('Clínica Internacional', 'clinicainternacional.com.pe', None, 'Clínica privada'),
+                     ('Sanna Clínicas', 'sanna.pe', None, 'Red de clínicas'),
+                     ('EsSalud', 'essalud.gob.pe', None, 'Seguridad social de salud'),
+                     ('MINSA', 'gob.pe', 'https://talentoperu.servir.gob.pe', 'Entidad pública de salud')]}}
 AFINIDAD = {'Programming_Skill': 'Ingeniería de Sistemas e IA', 'Communication_Skill': 'Marketing y Comunicación',
             'Teamwork': 'Administración y Negocios', 'GPA': 'Contabilidad y Finanzas',
             'Internship_Count': 'Administración y Negocios', 'Industry_Exposure': 'Ingeniería Industrial'}
@@ -201,11 +240,12 @@ def ofertas(comparacion, clase, carrera=''):
     if not elegida:
         mejor = max(range(len(VARIABLES)), key=lambda i: comparacion[i]['n_estudiante'])
         elegida = AFINIDAD[VARIABLES[mejor]]
-    puesto, empresas = CARRERAS[elegida]
+    datos = CARRERAS[elegida]
     tarjetas = []
-    for nombre, dominio, enlace in empresas:
+    for nombre, dominio, enlace, rubro in datos['empresas']:
         busqueda = enlace or 'https://pe.indeed.com/q-practicante-' + eliminar_tildes(nombre).replace(' ', '-') + '-empleos.html'
-        tarjetas.append({'empresa': nombre, 'dominio': dominio, 'puesto': puesto,
+        tarjetas.append({'empresa': nombre, 'dominio': dominio, 'rubro': rubro, 'puesto': datos['puesto'],
+                         'funciones': datos['funciones'], 'habilidades': datos['habilidades'],
                          'modalidad': MODALIDAD[clase], 'enlace': busqueda})
     return {'carrera': elegida, 'indicada': bool(buscar_carrera(carrera)), 'empresas': tarjetas}
 
