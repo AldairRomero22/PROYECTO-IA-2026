@@ -1,6 +1,5 @@
 import copy
 import unicodedata
-from urllib.parse import quote
 
 import sklearn
 from pathlib import Path
@@ -40,12 +39,43 @@ CONSEJOS = {'GPA': 'Reforzar el rendimiento académico: tutorías, grupos de est
             'Internship_Count': 'Buscar prácticas preprofesionales o pasantías, aunque sean de corta duración.',
             'Industry_Exposure': 'Acercarse al entorno laboral: charlas con empresas, ferias de empleo, visitas y mentorías con profesionales.'}
 
-PUESTOS = {'GPA': ('Banco o entidad financiera', 'Banca y finanzas', 'Analista de operaciones o de riesgos'),
-           'Programming_Skill': ('Empresa de desarrollo de software', 'Tecnología', 'Desarrollador/a de software'),
-           'Communication_Skill': ('Agencia de marketing y atención al cliente', 'Servicios y marketing', 'Asistente de comunicaciones y ventas'),
-           'Teamwork': ('Empresa de gestión de proyectos', 'Consultoría y proyectos', 'Asistente de coordinación de proyectos'),
-           'Internship_Count': ('Gran empresa con programa de practicantes', 'Programas de prácticas', 'Practicante preprofesional'),
-           'Industry_Exposure': ('Empresa agroindustrial o de manufactura', 'Industria y logística', 'Asistente de producción y logística')}
+CARRERAS = {
+    'Ingeniería de Sistemas e IA': ('Practicante de desarrollo, datos o infraestructura TI',
+        [('BCP', 'viabcp.com', 'https://www.viabcp.com/unete-al-equipo-bcp/talento-joven'),
+         ('Interbank', 'interbank.pe', 'https://pe.indeed.com/cmp/Interbank'),
+         ('Globant', 'globant.com', None), ('NTT DATA', 'nttdata.com', None)]),
+    'Administración y Negocios': ('Practicante de gestión comercial u operaciones',
+        [('Backus', 'backus.pe', 'https://pe.indeed.com/cmp/Backus'), ('Alicorp', 'alicorp.com.pe', None),
+         ('Falabella', 'falabella.com.pe', None), ('Supermercados Peruanos', 'spsa.pe', None)]),
+    'Contabilidad y Finanzas': ('Practicante contable, financiero o de auditoría',
+        [('BBVA', 'bbva.pe', None), ('Scotiabank', 'scotiabank.com.pe', None),
+         ('KPMG', 'kpmg.com', None), ('PwC', 'pwc.com', None)]),
+    'Marketing y Comunicación': ('Practicante de marketing, marca o comunicaciones',
+        [('Belcorp', 'belcorp.biz', None), ('Unilever', 'unilever.com', None),
+         ('Ripley', 'ripley.com.pe', None), ('Entel Perú', 'entel.pe', None)]),
+    'Ingeniería Industrial': ('Practicante de producción, calidad o logística',
+        [('Backus', 'backus.pe', 'https://pe.indeed.com/cmp/Backus'),
+         ('Cementos Pacasmayo', 'cementospacasmayo.com.pe', 'https://pe.indeed.com/cmp/Cementos-Pacasmayo'),
+         ('Alicorp', 'alicorp.com.pe', None), ('Grupo Gloria', 'grupogloria.com', None)]),
+    'Ingeniería Civil y Arquitectura': ('Practicante de obras, proyectos o diseño',
+        [('Cementos Pacasmayo', 'cementospacasmayo.com.pe', 'https://pe.indeed.com/cmp/Cementos-Pacasmayo'),
+         ('UNACEM', 'unacem.com.pe', None), ('AENZA', 'aenza.com', None), ('Cosapi', 'cosapi.com.pe', None)]),
+    'Ingeniería Agroindustrial': ('Practicante de procesos, calidad o producción agrícola',
+        [('Danper', 'danper.com', None), ('Camposol', 'camposol.com', 'https://pe.indeed.com/cmp/Camposol'),
+         ('Virú', 'viru.com.pe', None), ('Grupo Gloria', 'grupogloria.com', None)]),
+    'Derecho': ('Practicante legal o de asesoría jurídica',
+        [('SUNAT', 'sunat.gob.pe', 'https://talentoperu.servir.gob.pe'),
+         ('Poder Judicial', 'pj.gob.pe', 'https://talentoperu.servir.gob.pe'),
+         ('Ministerio Público', 'gob.pe', 'https://talentoperu.servir.gob.pe'), ('BCP', 'viabcp.com', 'https://www.viabcp.com/unete-al-equipo-bcp/talento-joven')]),
+    'Psicología': ('Practicante de recursos humanos y bienestar',
+        [('Backus', 'backus.pe', 'https://pe.indeed.com/cmp/Backus'), ('Alicorp', 'alicorp.com.pe', None),
+         ('Telefónica', 'telefonica.com.pe', None), ('Ripley', 'ripley.com.pe', None)]),
+    'Ciencias de la Salud': ('Practicante de salud, atención al paciente o gestión clínica',
+        [('Clínica Internacional', 'clinicainternacional.com.pe', None), ('Sanna Clínicas', 'sanna.pe', None),
+         ('EsSalud', 'essalud.gob.pe', None), ('MINSA', 'gob.pe', 'https://talentoperu.servir.gob.pe')])}
+AFINIDAD = {'Programming_Skill': 'Ingeniería de Sistemas e IA', 'Communication_Skill': 'Marketing y Comunicación',
+            'Teamwork': 'Administración y Negocios', 'GPA': 'Contabilidad y Finanzas',
+            'Internship_Count': 'Administración y Negocios', 'Industry_Exposure': 'Ingeniería Industrial'}
 MODALIDAD = {'High': 'Posiciones junior y programas trainee',
              'Medium': 'Prácticas preprofesionales y puestos de entrada',
              'Low': 'Prácticas de formación y programas de capacitación'}
@@ -155,21 +185,32 @@ def recomendar(sistema, valores, clase):
     return [{'variable': ETIQUETAS[v], 'actual': round(act, 2), 'objetivo': round(obj, 2),
              'consejo': CONSEJOS[v]} for _, v, act, obj in filas[:3]]
 
-def ofertas(comparacion, clase):
-    orden = sorted(range(len(VARIABLES)), key=lambda i: -comparacion[i]['n_estudiante'])[:4]
+def eliminar_tildes(texto):
+    return ''.join(c for c in unicodedata.normalize('NFD', texto.lower()) if not unicodedata.combining(c))
+
+
+def buscar_carrera(texto):
+    t = limpiar(texto or '')
+    if not t:
+        return ''
+    return next((c for c in CARRERAS if t == limpiar(c) or t in limpiar(c)), '')
+
+
+def ofertas(comparacion, clase, carrera=''):
+    elegida = buscar_carrera(carrera)
+    if not elegida:
+        mejor = max(range(len(VARIABLES)), key=lambda i: comparacion[i]['n_estudiante'])
+        elegida = AFINIDAD[VARIABLES[mejor]]
+    puesto, empresas = CARRERAS[elegida]
     tarjetas = []
-    for i in orden:
-        v = VARIABLES[i]
-        empresa, sector, puesto = PUESTOS[v]
-        asunto = quote(f'Postulación: {puesto}')
-        cuerpo = quote(f'Buen día,\n\nMe interesa postular al puesto de {puesto}. Adjunto mi CV para su revisión.\n\nSaludos cordiales.')
-        tarjetas.append({'empresa': empresa, 'sector': sector, 'puesto': puesto, 'modalidad': MODALIDAD[clase],
-                         'habilidad': CORTAS[v], 'valor': comparacion[i]['estudiante'],
-                         'enlace': f'mailto:?subject={asunto}&body={cuerpo}'})
-    return tarjetas
+    for nombre, dominio, enlace in empresas:
+        busqueda = enlace or 'https://pe.indeed.com/q-practicante-' + eliminar_tildes(nombre).replace(' ', '-') + '-empleos.html'
+        tarjetas.append({'empresa': nombre, 'dominio': dominio, 'puesto': puesto,
+                         'modalidad': MODALIDAD[clase], 'enlace': busqueda})
+    return {'carrera': elegida, 'indicada': bool(buscar_carrera(carrera)), 'empresas': tarjetas}
 
 
-def predecir(sistema, valores):
+def predecir(sistema, valores, carrera=''):
     fila = pd.DataFrame([[valores[v] for v in VARIABLES]], columns=VARIABLES)
     z = sistema['escalador'].transform(fila)
     prob = sistema['red'].predict_proba(z)[0]
@@ -196,7 +237,7 @@ def predecir(sistema, valores):
             'segunda_opinion': segunda, 'coincide': segunda == clase,
             'recomendaciones': recomendar(sistema, valores, clase),
             'comparacion': comparacion, 'fuera_de_rango': fuera,
-            'ofertas': ofertas(comparacion, clase)}
+            'ofertas': ofertas(comparacion, clase, carrera)}
 
 
 def leer_tabla(archivo, nombre):
@@ -223,11 +264,13 @@ def leer_tabla(archivo, nombre):
 
 def evaluar_tabla(sistema, tabla, columnas):
     id_col = next((c for c in tabla.columns if limpiar(c) in COLUMNAS_ID), None)
+    car_col = next((c for c in tabla.columns if limpiar(c) == 'carrera'), None)
     filas = []
     for i, (_, fila) in enumerate(tabla.iterrows(), 1):
         valores, errores = validar({v: fila[c] for c, v in columnas.items()})
         nombre = str(fila[id_col]) if id_col is not None and pd.notna(fila[id_col]) else f'Estudiante {i}'
-        registro = {'estudiante': nombre, 'errores': errores, 'valores': valores}
+        registro = {'estudiante': nombre, 'errores': errores, 'valores': valores,
+                    'carrera': str(fila[car_col]) if car_col is not None and pd.notna(fila[car_col]) else ''}
         if not errores:
             r = predecir(sistema, valores)
             registro.update({'clase': r['clase'], 'nivel': r['nivel'],
@@ -259,8 +302,8 @@ def resumen(sistema, ruta_csv=CSV):
 
 def plantilla():
     ejemplo = pd.DataFrame([
-        ['Estudiante 1', 7.2, 4, 5, 6, 1, 3],
-        ['Estudiante 2', 9.1, 8, 8, 7, 3, 8],
-        ['Estudiante 3', 6.4, 2, 3, 3, 0, 1]],
-        columns=['Estudiante'] + [COLUMNAS[v] for v in VARIABLES])
+        ['Estudiante 1', 7.2, 4, 5, 6, 1, 3, 'Ingeniería de Sistemas e IA'],
+        ['Estudiante 2', 9.1, 8, 8, 7, 3, 8, 'Administración y Negocios'],
+        ['Estudiante 3', 6.4, 2, 3, 3, 0, 1, 'Derecho']],
+        columns=['Estudiante'] + [COLUMNAS[v] for v in VARIABLES] + ['Carrera'])
     return ejemplo

@@ -107,13 +107,19 @@ svg text{fill:var(--tx);font-family:Poppins,system-ui,sans-serif}
 .leyenda{display:flex;flex-wrap:wrap;gap:14px;font-size:.8rem;color:var(--mut);margin-top:10px}
 .leyenda span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;background:var(--c)}
 .recs{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:14px}
-.empresas{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:14px}
-.empresa{padding:20px;display:flex;flex-direction:column;gap:6px}
-.empresa .sector{align-self:flex-start;padding:3px 12px;border-radius:999px;font-size:.74rem;font-weight:600;background:rgba(159,220,255,.14);border:1px solid rgba(159,220,255,.35);color:#cfeaff}
-.empresa h4{margin:6px 0 0;font-size:1.02rem}
-.empresa p{margin:0;font-size:.84rem;color:#d6d9f5}
-.empresa small{color:var(--mut)}
-.empresa .boton{margin-top:auto;align-self:flex-start;text-decoration:none}
+.col{display:flex;flex-direction:column;gap:16px;min-width:0}
+.col>.card{margin:0}
+.empresas{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.empresa{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:14px;border:1px solid var(--bd);background:rgba(255,255,255,.04)}
+.empresa>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.empresa h4{margin:0;font-size:.98rem}
+.empresa small{color:var(--mut);font-size:.78rem}
+.empresa .boton{padding:8px 14px;font-size:.82rem;text-decoration:none;white-space:nowrap}
+.emp-logo{position:relative;flex:none;width:46px;height:46px;border-radius:12px;background:#fff;display:grid;place-items:center;overflow:hidden}
+.emp-logo b{color:#0b1220;font-size:1.1rem}
+.emp-logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:7px;background:#fff}
+.carrera-campo{margin-top:16px}
+.carrera-campo select{max-width:420px}
 .rec{padding:18px}
 .rec .n{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--az),var(--pri2));font-weight:700;margin-bottom:10px}
 .rec b{display:block;margin-bottom:6px}
@@ -156,7 +162,7 @@ tr:last-child td{border-bottom:0}
 .aviso{padding:14px 16px;border-left:4px solid var(--am);background:rgba(245,183,10,.08);border-radius:0 12px 12px 0;font-size:.86rem;color:#e5e7ff}
 .mt{margin-top:16px}
 @media (max-width:1200px){.kpis{grid-template-columns:repeat(3,1fr)}.fila3{grid-template-columns:1fr 1fr}.insight{grid-column:1/-1}}
-@media (max-width:980px){.res,.fila2{grid-template-columns:1fr}.recs,.empresas,.pasos,.metr{grid-template-columns:1fr 1fr}}
+@media (max-width:980px){.res,.fila2{grid-template-columns:1fr}.recs,.pasos,.metr{grid-template-columns:1fr 1fr}}
 @media (max-width:860px){
 .app{grid-template-columns:minmax(0,1fr)}
 aside{position:static;height:auto;padding:14px 16px;border-right:0;border-bottom:1px solid var(--bd)}
@@ -170,7 +176,7 @@ main{padding:18px 16px 32px}
 .fila3,.campos,.acciones{grid-template-columns:1fr}
 .kpis{grid-template-columns:1fr 1fr}
 }
-@media (max-width:560px){.kpis,.recs,.empresas,.pasos,.metr{grid-template-columns:1fr 1fr}.top h1{font-size:1.4rem}.fecha{display:none}}
+@media (max-width:560px){.kpis,.recs,.pasos,.metr{grid-template-columns:1fr 1fr}.top h1{font-size:1.4rem}.fecha{display:none}}
 .vista.on{background:linear-gradient(135deg,rgba(120,200,255,.45),rgba(190,120,255,.45));color:#fff;border-color:rgba(255,255,255,.4)}
 button.redondo{cursor:pointer;padding:0}
 html.vidrio{--bg:#02040a;--card:rgba(255,255,255,.06);--card2:rgba(255,255,255,.1);--bd:rgba(255,255,255,.16);--tx:#eef3f7;--mut:#9fb0bb;--pri:#8fd3ff;--pri2:#c9e9ff;--az:#8fd3ff;--hielo:#9fdcff}
@@ -397,6 +403,14 @@ html.vidrio .hero>svg [fill="#2f3a8f"]{fill:#2b3d4c}
 </div>
 {% endfor %}
 </div>
+<div class="card campo carrera-campo">
+<label for="f_carrera"><svg class="ic"><use href="#i-cap"/></svg>Carrera</label>
+<p>Opcional. Con tu carrera se eligen las empresas del resultado; si la dejas vacía se estima por tus habilidades.</p>
+<select id="f_carrera" name="carrera">
+<option value="">Detectar según mis habilidades</option>
+{% for c in carreras %}<option value="{{ c }}" {{ 'selected' if valores.get('carrera') == c }}>{{ c }}</option>{% endfor %}
+</select>
+</div>
 <div class="acciones">
 <button type="button" class="boton sec" id="limpiar"><svg class="ic"><use href="#i-reset"/></svg>Limpiar</button>
 <button type="submit" class="boton"><svg class="ic"><use href="#i-wand"/></svg>Predecir competitividad</button>
@@ -407,6 +421,7 @@ html.vidrio .hero>svg [fill="#2f3a8f"]{fill:#2b3d4c}
 <section class="modulo" id="resultados">
 {% if resultado %}
 <div class="res">
+<div class="col">
 <div class="card">
 <h3>{{ alumno if alumno else 'Resultado de la predicción' }}</h3>
 <p class="sub">{% if nombre_archivo %}Leído de {{ nombre_archivo }} · {% endif %}Red neuronal MLP · probabilidad de cada nivel</p>
@@ -419,6 +434,20 @@ html.vidrio .hero>svg [fill="#2f3a8f"]{fill:#2b3d4c}
 {% else %}La regresión logística, usada como segunda opinión, estima nivel {{ {'Low':'bajo','Medium':'medio','High':'alto'}[resultado.segunda_opinion] }}: el perfil está cerca de un límite entre niveles.{% endif %}
 </p>
 {% if resultado.fuera_de_rango %}<div class="alerta">Atención: {{ resultado.fuera_de_rango|join(', ') }} están fuera del rango observado en los datos de entrenamiento; el resultado es menos confiable.</div>{% endif %}
+</div>
+<div class="card">
+<h3>Empresas para tu carrera</h3>
+<p class="sub">{% if resultado.ofertas.indicada %}Carrera: <b>{{ resultado.ofertas.carrera }}</b>{% else %}Carrera estimada por tus habilidades: <b>{{ resultado.ofertas.carrera }}</b>. Indícala en el formulario para afinar las opciones.{% endif %} Para tu nivel: {{ resultado.ofertas.empresas[0].modalidad|lower }}.</p>
+<div class="empresas">
+{% for o in resultado.ofertas.empresas %}
+<div class="empresa">
+<span class="emp-logo"><img src="https://www.google.com/s2/favicons?domain={{ o.dominio }}&amp;sz=64" alt="" loading="lazy" onerror="this.remove()"><b>{{ o.empresa[0] }}</b></span>
+<div><h4>{{ o.empresa }}</h4><small>{{ o.puesto }}</small></div>
+<a class="boton" href="{{ o.enlace }}" target="_blank" rel="noopener"><svg class="ic"><use href="#i-upload"/></svg>Enviar CV</a>
+</div>
+{% endfor %}
+</div>
+</div>
 </div>
 <div class="card">
 <h3>Perfil comparado con cada nivel</h3>
@@ -450,22 +479,6 @@ html.vidrio .hero>svg [fill="#2f3a8f"]{fill:#2b3d4c}
 {% else %}
 <p class="nota">El perfil iguala o supera el promedio de la clase Alta en todas las variables. Se recomienda mantener y consolidar estos resultados.</p>
 {% endif %}
-</div>
-<div class="card">
-<h3>Empresas que podrían interesarte</h3>
-<p class="sub">Opciones genéricas según tus habilidades más fuertes. Al pulsar el botón se abre un correo con el asunto listo; escribe el destinatario y adjunta tu CV.</p>
-<div class="empresas">
-{% for o in resultado.ofertas %}
-<div class="card empresa">
-<span class="sector">{{ o.sector }}</span>
-<h4>{{ o.empresa }}</h4>
-<p>Busca: <b>{{ o.puesto }}</b></p>
-<p>{{ o.modalidad }}</p>
-<small>Valora tu {{ o.habilidad|lower }} ({{ o.valor }})</small>
-<a class="boton" href="{{ o.enlace }}"><svg class="ic"><use href="#i-upload"/></svg>Enviar mi CV</a>
-</div>
-{% endfor %}
-</div>
 </div>
 {% else %}
 <div class="card vacio">

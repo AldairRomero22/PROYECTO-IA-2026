@@ -15,7 +15,7 @@ def contexto(**extra):
     base = {'variables': sistema.VARIABLES, 'etiquetas': sistema.ETIQUETAS,
             'limites': sistema.LIMITES, 'valores': {}, 'errores': [], 'resultado': None,
             'error_lote': None, 'nombre_archivo': '', 'alumno': '', 'origen': 'Individual',
-            'metricas': MODELO['metricas'], 'datos': DATOS,
+            'metricas': MODELO['metricas'], 'datos': DATOS, 'carreras': list(sistema.CARRERAS),
             'info': {'epoca': MODELO['epoca'], 'registros': MODELO['registros']}}
     base.update(extra)
     if base['resultado']:
@@ -39,7 +39,7 @@ def predecir_formulario():
     if errores:
         return render_template('index.html', **contexto(valores=request.form, errores=errores)), 400
     alumno = request.form.get('alumno', '')[:80]
-    return render_template('index.html', **contexto(valores=valores, resultado=sistema.predecir(MODELO, valores),
+    return render_template('index.html', **contexto(valores=valores, resultado=sistema.predecir(MODELO, valores, request.form.get('carrera', '')),
                                                     alumno=alumno, origen='Archivo' if alumno else 'Individual'))
 
 
@@ -70,8 +70,8 @@ def cargar_archivo():
         return rechazo('El archivo debe contener los datos de un solo alumno.')
     if lote[0]['errores']:
         return rechazo(' '.join(lote[0]['errores']))
-    return render_template('index.html', **contexto(valores=lote[0]['valores'], alumno=lote[0]['estudiante'],
-                                                    resultado=sistema.predecir(MODELO, lote[0]['valores']),
+    return render_template('index.html', **contexto(valores={**lote[0]['valores'], 'carrera': lote[0]['carrera']}, alumno=lote[0]['estudiante'],
+                                                    resultado=sistema.predecir(MODELO, lote[0]['valores'], lote[0]['carrera']),
                                                     origen='Archivo', nombre_archivo=archivo.filename))
 
 
