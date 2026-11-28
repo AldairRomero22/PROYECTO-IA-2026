@@ -116,12 +116,19 @@ section{width:min(1240px,calc(100% - 40px));margin:0 auto;padding:90px 0}
 .c3d,.p3d{transform-style:preserve-3d}
 .escena3d{position:relative;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);align-items:center;gap:clamp(24px,5vw,80px);perspective:1500px}
 .cv3d{position:relative;justify-self:center;width:min(400px,100%);transform:rotateY(calc(var(--bx,0)*9deg)) rotateX(calc(var(--by,0)*-6deg));transform-style:preserve-3d}
-.cv-in{position:relative;transform-style:preserve-3d;transform:rotateY(-14deg) rotateX(5deg)}
+.cv-in{position:relative;transform-style:preserve-3d;animation:giro 28s linear infinite}
+.cv-in img,.cv-in svg{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.cv-dorso{position:absolute;inset:0;transform:rotateY(180deg);backface-visibility:hidden;-webkit-backface-visibility:hidden;display:grid;place-items:center;background:linear-gradient(145deg,#fdfdfd,#e6e9ec);border:1px solid rgba(0,0,0,.12);box-shadow:0 40px 50px rgba(0,0,0,.35)}
+.cv-dorso b{font-size:2rem;letter-spacing:-.03em;color:#1c2630}
+.cv-dorso b em{font-style:normal;color:#1d8fe0}
+.cv-dorso::before{content:"";position:absolute;inset:8% 10%;background:repeating-linear-gradient(180deg,transparent 0 34px,rgba(28,38,48,.18) 34px 36px);opacity:.7}
+.cv-dorso b{position:relative;padding:8px 18px;background:#fdfdfd;border-radius:14px}
 .cv-in img{display:block;width:100%;height:auto;filter:drop-shadow(0 40px 50px rgba(0,0,0,.6));user-select:none}
 .cv-aura{position:absolute;inset:-14% -26%;background:radial-gradient(circle,rgba(143,211,255,.32),transparent 62%);filter:blur(34px);pointer-events:none}
 .cv-in svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-.cv-in path{fill:none;stroke:#1d8fe0;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:80;stroke-dashoffset:0}
-.cv-etq{position:absolute;right:-14%;bottom:12%;transform:translateZ(80px);padding:10px 18px;border-radius:18px;font-size:.82rem;font-weight:600;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 14px 36px rgba(0,0,0,.45)}
+.cv-in path{fill:none;stroke:#1d8fe0;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:80;stroke-dashoffset:80;animation:marca 7s ease-in-out infinite}
+.cv-in path:nth-child(2){animation-delay:.5s}.cv-in path:nth-child(3){animation-delay:1s}.cv-in path:nth-child(4){animation-delay:1.5s}.cv-in path:nth-child(5){animation-delay:2s}
+.cv-etq{position:absolute;right:-14%;bottom:12%;z-index:5;transform:translateZ(80px);padding:10px 18px;border-radius:18px;font-size:.82rem;font-weight:600;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 14px 36px rgba(0,0,0,.45)}
 .pasos-lista{list-style:none;margin:0;padding:0;display:grid;gap:16px}
 .pa{display:grid;grid-template-columns:54px minmax(0,1fr);gap:18px;align-items:center;padding:20px 22px;border-radius:24px;background:linear-gradient(150deg,rgba(255,255,255,.1),rgba(255,255,255,.03)),rgba(6,10,16,.4);border:1px solid rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 14px 40px rgba(0,0,0,.4);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
 .pa .n{display:grid;place-items:center;width:54px;height:54px;border-radius:50%;font-weight:700;font-size:1.2rem;color:#06121a;background:linear-gradient(135deg,#fff,#8fb4c9);box-shadow:0 0 24px rgba(159,220,255,.4)}
@@ -162,6 +169,8 @@ footer b{color:#dfe8ee}
 .cortina{position:fixed;inset:0;z-index:100;pointer-events:none;background:radial-gradient(circle at 50% 40%,#17222c,#02040a);clip-path:circle(0 at var(--ox,50%) var(--oy,50%));transition:clip-path .85s cubic-bezier(.7,0,.2,1)}
 .cortina.on{clip-path:circle(150% at var(--ox,50%) var(--oy,50%))}
 @keyframes pulsa{0%,100%{opacity:.75;scale:1}50%{opacity:1;scale:1.07}}
+@keyframes giro{from{transform:rotateX(6deg) rotateY(0deg)}to{transform:rotateX(6deg) rotateY(360deg)}}
+@keyframes marca{0%,8%{stroke-dashoffset:80}22%,82%{stroke-dashoffset:0}96%,100%{stroke-dashoffset:80}}
 @keyframes deriva{from{scale:1.04}to{scale:1.1}}
 @keyframes baja{from{opacity:0;transform:translate(-50%,-40px)}to{opacity:1;transform:translateX(-50%)}}
 @keyframes palabra{from{transform:translateY(115%) rotate(4deg);opacity:0}to{transform:none;opacity:1}}
@@ -253,7 +262,7 @@ footer b{color:#dfe8ee}
 <section class="empezar" id="empezar">
 <div class="titulo rv"><small>Tu primer empleo</small><h2>Cómo empezar a trabajar.</h2><p>Cuatro pasos para pasar de estudiante a candidato, aunque aún no tengas experiencia.</p></div>
 <div class="escena3d" id="pasos3d">
-<div class="cv3d"><div class="cv-aura"></div><div class="cv-in"><img src="{{ url_for('static', filename='cv.webp') }}" alt="Hoja de currículum con foto y lista de verificación" width="800" height="1231" loading="lazy"><svg viewBox="0 0 800 1231" aria-hidden="true"><path class="tk" d="M664 554L680 570L708 534"/><path class="tk" d="M664 664L680 680L708 644"/><path class="tk" d="M664 774L680 790L708 754"/><path class="tk" d="M664 884L680 900L708 864"/><path class="tk" d="M664 994L680 1010L708 974"/></svg><span class="cv-etq">Tu CV, listo</span></div></div>
+<div class="cv3d"><div class="cv-aura"></div><div class="cv-in"><img src="{{ url_for('static', filename='cv.webp') }}" alt="Hoja de currículum con foto y lista de verificación" width="800" height="1231" loading="lazy"><svg viewBox="0 0 800 1231" aria-hidden="true"><path class="tk" d="M664 554L680 570L708 534"/><path class="tk" d="M664 664L680 680L708 644"/><path class="tk" d="M664 774L680 790L708 754"/><path class="tk" d="M664 884L680 900L708 864"/><path class="tk" d="M664 994L680 1010L708 974"/></svg><div class="cv-dorso"><b>Emplea<em>360</em></b></div></div><span class="cv-etq">Tu CV, listo</span></div>
 <ol class="pasos-lista">
 <li class="pa"><span class="n">1</span><div><h3>Arma tu CV</h3><p>Una página, datos de contacto, formación, proyectos y habilidades. Usa tus resultados de Emplea360 para saber qué destacar.</p></div></li>
 <li class="pa"><span class="n">2</span><div><h3>Crea tu perfil profesional</h3><p>Completa tu perfil en LinkedIn y reúne tus trabajos del curso en un portafolio sencillo.</p></div></li>
@@ -290,8 +299,8 @@ footer b{color:#dfe8ee}
 <section id="modulos" style="padding-bottom:30px">
 <div class="titulo rv"><small>El sistema</small><h2>Un panel completo, en un solo lugar.</h2></div>
 <div class="cinta rv"><div>
-<span>Panel de control</span><span>Evaluar estudiante</span><span>Evaluación masiva</span><span>Resultados</span><span>Historial</span><span>Conjunto de datos</span><span>Acerca del sistema</span>
-<span>Panel de control</span><span>Evaluar estudiante</span><span>Evaluación masiva</span><span>Resultados</span><span>Historial</span><span>Conjunto de datos</span><span>Acerca del sistema</span>
+<span>Panel de control</span><span>Evaluar estudiante</span><span>Resultados</span><span>Historial</span><span>Conjunto de datos</span><span>Acerca del sistema</span>
+<span>Panel de control</span><span>Evaluar estudiante</span><span>Resultados</span><span>Historial</span><span>Conjunto de datos</span><span>Acerca del sistema</span>
 </div></div>
 </section>
 
@@ -448,31 +457,9 @@ footer b{color:#dfe8ee}
 (function () {
   if (!window.gsap || !window.ScrollTrigger || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   gsap.registerPlugin(ScrollTrigger);
-  const mm = gsap.matchMedia();
 
-  mm.add('(min-width: 900px)', () => {
-    const pasos = gsap.utils.toArray('.pa');
-    const ticks = gsap.utils.toArray('.tk');
-    gsap.set(pasos, {opacity: 0.25, x: 60});
-    gsap.set(ticks, {strokeDashoffset: 80});
-    const tl = gsap.timeline({scrollTrigger: {trigger: '#pasos3d', start: 'top 14%', end: '+=280%', scrub: 1, pin: true, anticipatePin: 1}});
-    tl.fromTo('.cv-in', {rotateY: -75, rotateX: 28, scale: 0.65, opacity: 0.1}, {rotateY: -14, rotateX: 5, scale: 1, opacity: 1, duration: 1.2, ease: 'power3.out'});
-    pasos.forEach((p, i) => {
-      tl.to(p, {opacity: 1, x: 0, duration: 0.6, ease: 'power2.out'}, '>')
-        .to('.cv-in', {rotateY: i % 2 ? 18 : -22, rotateX: 4 + i * 3, scale: 1 + i * 0.03, duration: 0.9, ease: 'power1.inOut'}, '<')
-        .to(ticks[i], {strokeDashoffset: 0, duration: 0.5, ease: 'power1.out'}, '<0.25');
-      if (i < pasos.length - 1) tl.to(p, {opacity: 0.55, duration: 0.3}, '>0.2');
-    });
-    tl.to(ticks[4], {strokeDashoffset: 0, duration: 0.5}, '>')
-      .to(pasos, {opacity: 1, duration: 0.3}, '<')
-      .to('.cv-in', {rotateY: -8, rotateX: 3, scale: 1.04, duration: 0.8, ease: 'power2.inOut'}, '<');
-  });
-
-  mm.add('(max-width: 899px)', () => {
-    gsap.fromTo('.cv-in', {rotateY: -70, rotateX: 25, scale: 0.7, opacity: 0.1}, {rotateY: -10, rotateX: 4, scale: 1, opacity: 1, ease: 'none', scrollTrigger: {trigger: '.cv3d', start: 'top 95%', end: 'top 35%', scrub: 1}});
-    gsap.utils.toArray('.pa').forEach(p => {
-      gsap.fromTo(p, {opacity: 0, x: 60, rotateY: -35}, {opacity: 1, x: 0, rotateY: 0, ease: 'none', scrollTrigger: {trigger: p, start: 'top 95%', end: 'top 65%', scrub: 1}});
-    });
+  gsap.utils.toArray('.pa').forEach(p => {
+    gsap.fromTo(p, {opacity: 0, x: 80, rotateY: -40, transformOrigin: '0% 50%'}, {opacity: 1, x: 0, rotateY: 0, ease: 'power3.out', scrollTrigger: {trigger: p, start: 'top 96%', end: 'top 62%', scrub: 1}});
   });
 
   gsap.utils.toArray('.c3d').forEach((el, i) => {

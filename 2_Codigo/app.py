@@ -14,11 +14,11 @@ DATOS = sistema.resumen(MODELO)
 def contexto(**extra):
     base = {'variables': sistema.VARIABLES, 'etiquetas': sistema.ETIQUETAS,
             'limites': sistema.LIMITES, 'valores': {}, 'errores': [], 'resultado': None,
-            'lote': None, 'error_lote': None, 'nombre_archivo': '', 'alumno': '', 'origen': 'Individual', 'desde': '',
+            'error_lote': None, 'nombre_archivo': '', 'alumno': '', 'origen': 'Individual',
             'metricas': MODELO['metricas'], 'datos': DATOS,
             'info': {'epoca': MODELO['epoca'], 'registros': MODELO['registros']}}
     base.update(extra)
-    if base['resultado'] or base['lote']:
+    if base['resultado']:
         base['marca'] = uuid.uuid4().hex
     return base
 
@@ -52,32 +52,33 @@ def predecir_api():
     return jsonify(sistema.predecir(MODELO, valores))
 
 
+def rechazo(mensaje):
+    return render_template('index.html', **contexto(error_lote=mensaje)), 400
+
+
 @app.post('/cargar')
 def cargar_archivo():
     archivo = request.files.get('archivo')
-    desde = request.form.get('desde', '')
     if archivo is None or not archivo.filename:
-        return render_template('index.html', **contexto(error_lote='Seleccione un archivo .xlsx o .csv.', desde=desde)), 400
+        return rechazo('Seleccione un archivo .xlsx o .csv.')
     try:
         tabla, columnas = sistema.leer_tabla(archivo, archivo.filename)
     except Exception as e:
-        return render_template('index.html', **contexto(error_lote=str(e), desde=desde)), 400
+        return rechazo(str(e))
     lote = sistema.evaluar_tabla(MODELO, tabla, columnas)
-    if desde == 'evaluar' and len(lote) == 1 and lote[0]['errores']:
-        return render_template('index.html', **contexto(error_lote=' '.join(lote[0]['errores']), desde=desde)), 400
-    if len(lote) == 1 and not lote[0]['errores']:
-        return render_template('index.html', **contexto(valores=lote[0]['valores'], alumno=lote[0]['estudiante'],
-                                                        resultado=sistema.predecir(MODELO, lote[0]['valores']),
-                                                        origen='Archivo', nombre_archivo=archivo.filename))
-    return render_template('index.html', **contexto(lote=lote, nombre_archivo=archivo.filename))
+    if len(lote) != 1:
+        return rechazo('El archivo debe contener los datos de un solo alumno.')
+    if lote[0]['errores']:
+        return rechazo(' '.join(lote[0]['errores']))
+    return render_template('index.html', **contexto(valores=lote[0]['valores'], alumno=lote[0]['estudiante'],
+                                                    resultado=sistema.predecir(MODELO, lote[0]['valores']),
+                                                    origen='Archivo', nombre_archivo=archivo.filename))
 
 
 @app.get('/plantilla.xlsx')
 def descargar_plantilla():
     salida = io.BytesIO()
-    tabla = sistema.plantilla()
-    if request.args.get('alumnos') == '1':
-        tabla = tabla.head(1).replace({'Estudiante 1': 'Nombre del alumno'})
+    tabla = sistema.plantilla().head(1).replace({'Estudiante 1': 'Nombre del alumno'})
     tabla.to_excel(salida, index=False)
     salida.seek(0)
     return send_file(salida, as_attachment=True, download_name='plantilla_estudiantes.xlsx',

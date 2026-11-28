@@ -1,5 +1,6 @@
 import copy
 import unicodedata
+from urllib.parse import quote
 
 import sklearn
 from pathlib import Path
@@ -38,6 +39,16 @@ CONSEJOS = {'GPA': 'Reforzar el rendimiento académico: tutorías, grupos de est
             'Teamwork': 'Participar en proyectos grupales, hackatones o voluntariados para fortalecer el trabajo colaborativo.',
             'Internship_Count': 'Buscar prácticas preprofesionales o pasantías, aunque sean de corta duración.',
             'Industry_Exposure': 'Acercarse al entorno laboral: charlas con empresas, ferias de empleo, visitas y mentorías con profesionales.'}
+
+PUESTOS = {'GPA': ('Banco o entidad financiera', 'Banca y finanzas', 'Analista de operaciones o de riesgos'),
+           'Programming_Skill': ('Empresa de desarrollo de software', 'Tecnología', 'Desarrollador/a de software'),
+           'Communication_Skill': ('Agencia de marketing y atención al cliente', 'Servicios y marketing', 'Asistente de comunicaciones y ventas'),
+           'Teamwork': ('Empresa de gestión de proyectos', 'Consultoría y proyectos', 'Asistente de coordinación de proyectos'),
+           'Internship_Count': ('Gran empresa con programa de practicantes', 'Programas de prácticas', 'Practicante preprofesional'),
+           'Industry_Exposure': ('Empresa agroindustrial o de manufactura', 'Industria y logística', 'Asistente de producción y logística')}
+MODALIDAD = {'High': 'Posiciones junior y programas trainee',
+             'Medium': 'Prácticas preprofesionales y puestos de entrada',
+             'Low': 'Prácticas de formación y programas de capacitación'}
 
 
 def limpiar(texto):
@@ -144,6 +155,19 @@ def recomendar(sistema, valores, clase):
     return [{'variable': ETIQUETAS[v], 'actual': round(act, 2), 'objetivo': round(obj, 2),
              'consejo': CONSEJOS[v]} for _, v, act, obj in filas[:3]]
 
+def ofertas(comparacion, clase):
+    orden = sorted(range(len(VARIABLES)), key=lambda i: -comparacion[i]['n_estudiante'])[:4]
+    tarjetas = []
+    for i in orden:
+        v = VARIABLES[i]
+        empresa, sector, puesto = PUESTOS[v]
+        asunto = quote(f'Postulación: {puesto}')
+        cuerpo = quote(f'Buen día,\n\nMe interesa postular al puesto de {puesto}. Adjunto mi CV para su revisión.\n\nSaludos cordiales.')
+        tarjetas.append({'empresa': empresa, 'sector': sector, 'puesto': puesto, 'modalidad': MODALIDAD[clase],
+                         'habilidad': CORTAS[v], 'valor': comparacion[i]['estudiante'],
+                         'enlace': f'mailto:?subject={asunto}&body={cuerpo}'})
+    return tarjetas
+
 
 def predecir(sistema, valores):
     fila = pd.DataFrame([[valores[v] for v in VARIABLES]], columns=VARIABLES)
@@ -171,7 +195,8 @@ def predecir(sistema, valores):
             'probabilidades': {c: round(float(p), 4) for c, p in zip(CLASES, prob)},
             'segunda_opinion': segunda, 'coincide': segunda == clase,
             'recomendaciones': recomendar(sistema, valores, clase),
-            'comparacion': comparacion, 'fuera_de_rango': fuera}
+            'comparacion': comparacion, 'fuera_de_rango': fuera,
+            'ofertas': ofertas(comparacion, clase)}
 
 
 def leer_tabla(archivo, nombre):

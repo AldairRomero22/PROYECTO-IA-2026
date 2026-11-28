@@ -74,9 +74,6 @@ svg text{fill:var(--tx);font-family:Poppins,system-ui,sans-serif}
 .encabezado .ic{width:34px;height:34px;padding:6px;border-radius:10px;background:rgba(91,108,255,.18);color:#a5b0ff}
 .encabezado h2{margin:0;font-size:1.45rem;font-weight:600}
 .encabezado p{margin:2px 0 0;color:var(--mut);font-size:.88rem}
-.ejemplos{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-.ejemplos button{padding:6px 14px;border:1px solid var(--bd);border-radius:999px;background:var(--card);color:#c9cdf0;font-size:.8rem;cursor:pointer}
-.ejemplos button:hover{border-color:var(--pri);color:#fff}
 .campos{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .campo{padding:18px}
 .campo label{display:flex;align-items:center;gap:10px;font-weight:600;font-size:1rem}
@@ -110,6 +107,13 @@ svg text{fill:var(--tx);font-family:Poppins,system-ui,sans-serif}
 .leyenda{display:flex;flex-wrap:wrap;gap:14px;font-size:.8rem;color:var(--mut);margin-top:10px}
 .leyenda span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;background:var(--c)}
 .recs{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:14px}
+.empresas{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:14px}
+.empresa{padding:20px;display:flex;flex-direction:column;gap:6px}
+.empresa .sector{align-self:flex-start;padding:3px 12px;border-radius:999px;font-size:.74rem;font-weight:600;background:rgba(159,220,255,.14);border:1px solid rgba(159,220,255,.35);color:#cfeaff}
+.empresa h4{margin:6px 0 0;font-size:1.02rem}
+.empresa p{margin:0;font-size:.84rem;color:#d6d9f5}
+.empresa small{color:var(--mut)}
+.empresa .boton{margin-top:auto;align-self:flex-start;text-decoration:none}
 .rec{padding:18px}
 .rec .n{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--az),var(--pri2));font-weight:700;margin-bottom:10px}
 .rec b{display:block;margin-bottom:6px}
@@ -122,10 +126,6 @@ th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--bd);white-
 th{color:var(--mut);font-weight:500;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em}
 tr:last-child td{border-bottom:0}
 .tabla{overflow-x:auto}
-.detalle{margin:0}
-.ver{padding:5px 12px;border-radius:8px;border:1px solid var(--bd);background:rgba(91,108,255,.12);color:#c9d2ff;font-size:.78rem;cursor:pointer}
-.ver:hover{background:rgba(91,108,255,.25);color:#fff}
-.subir .enlace{margin-left:6px}
 .vacio{text-align:center;padding:50px 20px}
 .vacio .ic{width:48px;height:48px;color:#a5b0ff;margin-bottom:10px}
 .vacio h3{font-size:1.15rem}
@@ -144,18 +144,8 @@ tr:last-child td{border-bottom:0}
 .subida-alumno{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:0}
 .separador{display:flex;align-items:center;gap:14px;margin:18px 0;color:var(--mut);font-size:.82rem}
 .separador::before,.separador::after{content:"";flex:1;height:1px;background:var(--bd)}
-.subir{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:16px}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-.chips span{padding:4px 12px;border-radius:999px;background:rgba(91,108,255,.12);border:1px solid var(--bd);font-size:.78rem;color:#c9cdf0}
 .enlace{color:#a5b0ff;font-weight:500;text-decoration:none}
 .enlace:hover{text-decoration:underline}
-.mini{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:18px 0}
-.mini div{padding:14px;border-radius:12px;border:1px solid var(--bd);background:var(--card)}
-.mini strong{display:block;font-size:1.4rem;font-weight:600}
-.mini span{font-size:.78rem;color:var(--mut)}
-.resumen{font-size:.84rem;color:var(--mut);margin:0 0 6px}
-.resumen span{margin-right:14px}
-.barra-sup{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
 .fila2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
 .pasos{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:16px}
 .paso .n{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--az),var(--pri2));font-weight:700;margin-bottom:10px}
@@ -165,8 +155,8 @@ tr:last-child td{border-bottom:0}
 .metr span{font-size:.8rem;color:var(--mut)}
 .aviso{padding:14px 16px;border-left:4px solid var(--am);background:rgba(245,183,10,.08);border-radius:0 12px 12px 0;font-size:.86rem;color:#e5e7ff}
 .mt{margin-top:16px}
-@media (max-width:1200px){.kpis{grid-template-columns:repeat(3,1fr)}.fila3{grid-template-columns:1fr 1fr}.insight{grid-column:1/-1}.mini{grid-template-columns:repeat(3,1fr)}}
-@media (max-width:980px){.res,.fila2{grid-template-columns:1fr}.recs,.pasos,.metr{grid-template-columns:1fr 1fr}}
+@media (max-width:1200px){.kpis{grid-template-columns:repeat(3,1fr)}.fila3{grid-template-columns:1fr 1fr}.insight{grid-column:1/-1}}
+@media (max-width:980px){.res,.fila2{grid-template-columns:1fr}.recs,.empresas,.pasos,.metr{grid-template-columns:1fr 1fr}}
 @media (max-width:860px){
 .app{grid-template-columns:minmax(0,1fr)}
 aside{position:static;height:auto;padding:14px 16px;border-right:0;border-bottom:1px solid var(--bd)}
@@ -180,7 +170,7 @@ main{padding:18px 16px 32px}
 .fila3,.campos,.acciones{grid-template-columns:1fr}
 .kpis{grid-template-columns:1fr 1fr}
 }
-@media (max-width:560px){.kpis,.recs,.pasos,.metr,.mini{grid-template-columns:1fr 1fr}.top h1{font-size:1.4rem}.fecha{display:none}}
+@media (max-width:560px){.kpis,.recs,.empresas,.pasos,.metr{grid-template-columns:1fr 1fr}.top h1{font-size:1.4rem}.fecha{display:none}}
 .vista.on{background:linear-gradient(135deg,rgba(120,200,255,.45),rgba(190,120,255,.45));color:#fff;border-color:rgba(255,255,255,.4)}
 button.redondo{cursor:pointer;padding:0}
 html.vidrio{--bg:#02040a;--card:rgba(255,255,255,.06);--card2:rgba(255,255,255,.1);--bd:rgba(255,255,255,.16);--tx:#eef3f7;--mut:#9fb0bb;--pri:#8fd3ff;--pri2:#c9e9ff;--az:#8fd3ff;--hielo:#9fdcff}
@@ -211,8 +201,8 @@ html.vidrio .boton{background:linear-gradient(135deg,#ffffff,#a9c4d4);color:#061
 html.vidrio .boton:hover{box-shadow:inset 0 1px 0 #fff,0 14px 40px rgba(159,220,255,.5)}
 html.vidrio .boton:active{transform:scale(.96)}
 html.vidrio .boton:not(.sec)::after{content:"";position:absolute;top:0;left:-70%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.8),transparent);transform:skewX(-20deg);animation:destello 4.5s ease-in-out infinite}
-html.vidrio .boton.sec,html.vidrio .ejemplos button,html.vidrio .chips span,html.vidrio .ver{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);color:#e8f0f5;box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
-html.vidrio .boton.sec:hover,html.vidrio .ejemplos button:hover,html.vidrio .ver:hover{background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.4)}
+html.vidrio .boton.sec{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);color:#e8f0f5;box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+html.vidrio .boton.sec:hover{background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.4)}
 html.vidrio .encabezado .ic,html.vidrio .campo label .ic,html.vidrio .insight h3 .ic,html.vidrio .vacio .ic,html.vidrio .zona .ic,html.vidrio .enlace,html.vidrio .kpi .ic{color:var(--hielo)}
 html.vidrio .encabezado .ic{background:rgba(159,220,255,.14)}
 html.vidrio .insight p,html.vidrio .rec p,html.vidrio .aviso{color:#d3dee5}
@@ -221,7 +211,6 @@ html.vidrio .campo input:focus,html.vidrio .campo select:focus{border-color:var(
 html.vidrio .campo select{background-image:linear-gradient(45deg,transparent 50%,#9fdcff 50%),linear-gradient(135deg,#9fdcff 50%,transparent 50%)}
 html.vidrio .campo select option{background:#0c1218}
 html.vidrio .campo input::placeholder{color:rgba(255,255,255,.4)}
-html.vidrio .mini div{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.18)}
 html.vidrio .zona{background:rgba(255,255,255,.04);border-color:rgba(159,220,255,.4)}
 html.vidrio .zona:hover,html.vidrio .zona.sobre{background:rgba(255,255,255,.1);border-color:var(--hielo)}
 html.vidrio .rec .n,html.vidrio .paso .n{background:linear-gradient(135deg,#ffffff,#8fb4c9);color:#06121a}
@@ -290,8 +279,7 @@ html.vidrio .hero>svg [fill="#2f3a8f"]{fill:#2b3d4c}
 <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3s6 6.4 6 11a6 6 0 0 1-12 0c0-4.6 6-11 6-11z"/><path d="M9.5 14.5a2.5 2.5 0 0 0 2.5 2.5"/></symbol>
 <symbol id="i-brain" viewBox="0 0 24 24"><path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 6 1V5a2 2 0 0 0-3-1zM15 4a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-6 1"/></symbol>
 </svg>
-{% set ok = lote|selectattr('clase', 'defined')|list if lote else [] %}
-{% set inicial = 'resultados' if resultado else 'evaluar' if (errores or (error_lote and desde == 'evaluar')) else 'masiva' if (lote or error_lote) else '' %}
+{% set inicial = 'resultados' if resultado else 'evaluar' if (errores or error_lote) else '' %}
 {% set campos = {
   'GPA': ('Promedio', 'Promedio académico del estudiante (0 a 10).', 'cap', 'Ej. 7.5'),
   'Programming_Skill': ('Programación', 'Nivel de habilidades de programación (1 a 10).', 'code', 'Ej. 6'),
@@ -305,7 +293,6 @@ html.vidrio .hero>svg [fill="#2f3a8f"]{fill:#2b3d4c}
 <nav>
 <button type="button" data-m="dashboard"><svg class="ic"><use href="#i-dash"/></svg>Panel de control</button>
 <button type="button" data-m="evaluar"><svg class="ic"><use href="#i-user"/></svg>Evaluar estudiante</button>
-<button type="button" data-m="masiva"><svg class="ic"><use href="#i-users"/></svg>Evaluación masiva</button>
 <button type="button" data-m="resultados"><svg class="ic"><use href="#i-chart"/></svg>Resultados</button>
 <button type="button" data-m="historial"><svg class="ic"><use href="#i-clock"/></svg>Historial</button>
 <button type="button" data-m="dataset"><svg class="ic"><use href="#i-db"/></svg>Conjunto de datos</button>
@@ -376,24 +363,18 @@ html.vidrio .hero>svg [fill="#2f3a8f"]{fill:#2b3d4c}
 <div class="encabezado"><svg class="ic"><use href="#i-cap"/></svg><div><h2>Analiza el potencial de un estudiante</h2><p>Introduce las características académicas y profesionales para obtener una predicción de competitividad laboral.</p></div></div>
 <div class="card carga-alumno">
 <form method="post" action="/cargar" enctype="multipart/form-data" class="subida-alumno">
-<input type="hidden" name="desde" value="evaluar">
 <label class="zona compacta">
 <svg class="ic"><use href="#i-upload"/></svg>
 <span><b>Subir archivo del alumno</b><small>Arrastra o selecciona un .xlsx o .csv con sus datos</small></span>
 <input type="file" name="archivo" accept=".xlsx,.xls,.csv" required>
 </label>
 <button type="submit" class="boton"><svg class="ic"><use href="#i-wand"/></svg>Evaluar archivo</button>
-<a class="enlace" href="/plantilla.xlsx?alumnos=1">Plantilla</a>
+<a class="enlace" href="/plantilla.xlsx">Plantilla</a>
 </form>
-{% if error_lote and desde == 'evaluar' %}<div class="err" style="margin:14px 0 0">{{ error_lote }}</div>{% endif %}
+{% if error_lote %}<div class="err" style="margin:14px 0 0">{{ error_lote }}</div>{% endif %}
 </div>
 <div class="separador"><span>o completa los datos manualmente</span></div>
 {% if errores %}<div class="err"><b>Revise los datos ingresados:</b><ul>{% for e in errores %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
-<div class="ejemplos">
-<button type="button" data-ej="6.6,2,3,3,0,1">Perfil bajo</button>
-<button type="button" data-ej="7.9,5,5,5,2,5">Perfil medio</button>
-<button type="button" data-ej="9.2,8,8,8,3,8">Perfil alto</button>
-</div>
 <form method="post" action="/predecir" id="formulario">
 <div class="campos">
 {% for v in variables %}
@@ -421,62 +402,6 @@ html.vidrio .hero>svg [fill="#2f3a8f"]{fill:#2b3d4c}
 <button type="submit" class="boton"><svg class="ic"><use href="#i-wand"/></svg>Predecir competitividad</button>
 </div>
 </form>
-</section>
-
-<section class="modulo" id="masiva">
-<div class="encabezado"><svg class="ic"><use href="#i-users"/></svg><div><h2>Evaluación masiva</h2><p>Sube un Excel (.xlsx) o CSV con los datos de varios estudiantes y evalúalos a la vez. Los datos no se guardan en el servidor.</p></div></div>
-{% if error_lote and desde != 'evaluar' %}<div class="err">{{ error_lote }}</div>{% endif %}
-<div class="card">
-<form method="post" action="/cargar" enctype="multipart/form-data" id="form-archivo">
-<label class="zona">
-<svg class="ic"><use href="#i-upload"/></svg>
-<b>Arrastra tu archivo aquí o haz clic para seleccionarlo</b>
-<small>Formatos .xlsx o .csv · un alumno o hasta 500 estudiantes</small>
-<input type="file" name="archivo" accept=".xlsx,.xls,.csv" required>
-</label>
-<div class="subir">
-<button type="submit" class="boton"><svg class="ic"><use href="#i-wand"/></svg>Evaluar archivo</button>
-<a class="enlace" href="/plantilla.xlsx?alumnos=1">Plantilla de un alumno</a>
-<a class="enlace" href="/plantilla.xlsx">Plantilla de varios alumnos</a>
-</div>
-</form>
-<div class="chips">{% for v in variables %}<span>{{ campos[v][0] }}</span>{% endfor %}<span>Estudiante (opcional)</span></div>
-<p class="nota">Si el archivo tiene un solo alumno, se muestra directamente su resultado completo. Con varios alumnos, usa «Ver detalle» en cada fila.</p>
-</div>
-{% if lote %}
-<div class="mini">
-<div><strong>{{ lote|length }}</strong><span>Estudiantes</span></div>
-<div><strong style="color:#86efac">{{ ok|selectattr('clase', 'equalto', 'High')|list|length }}</strong><span>Alta</span></div>
-<div><strong style="color:#fcd34d">{{ ok|selectattr('clase', 'equalto', 'Medium')|list|length }}</strong><span>Media</span></div>
-<div><strong style="color:#fca5a5">{{ ok|selectattr('clase', 'equalto', 'Low')|list|length }}</strong><span>Baja</span></div>
-<div><strong>{{ lote|length - ok|length }}</strong><span>Con errores</span></div>
-</div>
-<div class="card">
-<div class="barra-sup">
-<p class="resumen"><span><b>{{ nombre_archivo }}</b></span><span>Con errores: <b>{{ lote|length - ok|length }}</b></span></p>
-<button type="button" class="boton sec" id="descargar"><svg class="ic"><use href="#i-download"/></svg>Descargar resultados (CSV)</button>
-</div>
-<div class="tabla">
-<table>
-<tr><th>Estudiante</th><th>Nivel</th><th>Prob. Alta</th><th>Prioridad de mejora</th><th>Observación</th><th></th></tr>
-{% for f in lote %}
-<tr>
-<td>{{ f.estudiante }}</td>
-{% if f.errores %}
-<td><span class="tag Error">Error</span></td><td>-</td><td>-</td><td style="white-space:normal">{{ f.errores|join(' ') }}</td><td></td>
-{% else %}
-<td><span class="tag {{ f.clase }}">{{ f.nivel }}</span></td>
-<td>{{ (f.prob_alta*100)|round(1) }} %</td>
-<td>{{ f.prioridad or 'Mantener resultados' }}</td>
-<td>{% if not f.coincide %}Cerca de un límite entre niveles{% endif %}</td>
-<td><form method="post" action="/predecir" class="detalle"><input type="hidden" name="alumno" value="{{ f.estudiante }}">{% for v in variables %}<input type="hidden" name="{{ v }}" value="{{ f.valores[v] }}">{% endfor %}<button type="submit" class="ver">Ver detalle</button></form></td>
-{% endif %}
-</tr>
-{% endfor %}
-</table>
-</div>
-</div>
-{% endif %}
 </section>
 
 <section class="modulo" id="resultados">
@@ -526,6 +451,22 @@ html.vidrio .hero>svg [fill="#2f3a8f"]{fill:#2b3d4c}
 <p class="nota">El perfil iguala o supera el promedio de la clase Alta en todas las variables. Se recomienda mantener y consolidar estos resultados.</p>
 {% endif %}
 </div>
+<div class="card">
+<h3>Empresas que podrían interesarte</h3>
+<p class="sub">Opciones genéricas según tus habilidades más fuertes. Al pulsar el botón se abre un correo con el asunto listo; escribe el destinatario y adjunta tu CV.</p>
+<div class="empresas">
+{% for o in resultado.ofertas %}
+<div class="card empresa">
+<span class="sector">{{ o.sector }}</span>
+<h4>{{ o.empresa }}</h4>
+<p>Busca: <b>{{ o.puesto }}</b></p>
+<p>{{ o.modalidad }}</p>
+<small>Valora tu {{ o.habilidad|lower }} ({{ o.valor }})</small>
+<a class="boton" href="{{ o.enlace }}"><svg class="ic"><use href="#i-upload"/></svg>Enviar mi CV</a>
+</div>
+{% endfor %}
+</div>
+</div>
 {% else %}
 <div class="card vacio">
 <svg class="ic"><use href="#i-chart"/></svg>
@@ -546,7 +487,7 @@ html.vidrio .hero>svg [fill="#2f3a8f"]{fill:#2b3d4c}
 </div>
 </div>
 <div class="tabla"><table><thead><tr><th>Fecha</th><th>Estudiante</th><th>Origen</th><th>Nivel</th><th>Prob. Alta</th>{% for v in variables %}<th>{{ campos[v][0] }}</th>{% endfor %}</tr></thead><tbody id="tabla-hist"></tbody></table></div>
-<p class="nota" id="hist-vacio">Todavía no hay evaluaciones. Las predicciones individuales y masivas aparecerán aquí.</p>
+<p class="nota" id="hist-vacio">Todavía no hay evaluaciones. Las predicciones aparecerán aquí.</p>
 </div>
 </section>
 
@@ -611,7 +552,6 @@ html.vidrio .hero>svg [fill="#2f3a8f"]{fill:#2b3d4c}
 </div>
 <script>
 const RES = {{ resultado|tojson if resultado else 'null' }};
-const LOTE = {{ lote|tojson if lote else 'null' }};
 const VALORES = {{ valores|tojson if resultado else 'null' }};
 const MARCA = {{ marca|tojson if marca else 'null' }};
 const ALUMNO = {{ alumno|tojson }};
@@ -626,7 +566,6 @@ const COLOR = {High: '#22c55e', Medium: '#f5b70a', Low: '#ef4444'};
 const TITULOS = {
   dashboard: ['Panel de control', 'Resumen general del sistema inteligente'],
   evaluar: ['Evaluar estudiante', 'Predicción individual de competitividad laboral'],
-  masiva: ['Evaluación masiva', 'Carga de archivos Excel o CSV'],
   resultados: ['Resultados', ALUMNO ? 'Detalle de ' + ALUMNO : 'Detalle de la última predicción'],
   historial: ['Historial', 'Evaluaciones realizadas en este navegador'],
   dataset: ['Conjunto de datos', 'Datos usados para entrenar el modelo'],
@@ -649,8 +588,6 @@ try { previa = localStorage.getItem('competia_marca'); } catch (e) {}
 if (MARCA && MARCA !== previa) {
   const ahora = Date.now();
   if (RES && (!ALUMNO || ARCHIVO)) historial.push({f: ahora, n: ALUMNO || 'Evaluación individual', o: ORIGEN, c: RES.clase, p: RES.probabilidades.High, v: VALORES});
-  if (LOTE) LOTE.filter(f => !f.errores.length).forEach(f =>
-    historial.push({f: ahora, n: f.estudiante, o: 'Masiva', c: f.clase, p: f.prob_alta, v: f.valores}));
   historial = historial.slice(-1000);
   guardar();
   try { localStorage.setItem('competia_marca', MARCA); } catch (e) {}
@@ -780,8 +717,6 @@ document.getElementById('borrar').onclick = () => {
   dashboard();
   tablaHistorial();
 };
-document.querySelectorAll('[data-ej]').forEach(b => b.onclick = () =>
-  b.dataset.ej.split(',').forEach((x, i) => document.getElementById('f_' + VARS[i]).value = x));
 document.getElementById('limpiar').onclick = () => VARS.forEach(v => document.getElementById('f_' + v).value = '');
 document.querySelectorAll('.zona').forEach(zona => {
   const archivo = zona.querySelector('input'), texto = zona.querySelector('b'), inicial = texto.textContent;
@@ -790,14 +725,6 @@ document.querySelectorAll('.zona').forEach(zona => {
   ['dragleave', 'drop'].forEach(t => zona.addEventListener(t, e => { e.preventDefault(); zona.classList.remove('sobre'); }));
   zona.addEventListener('drop', e => { if (e.dataTransfer.files.length) { archivo.files = e.dataTransfer.files; archivo.onchange(); } });
 });
-if (LOTE) {
-  document.getElementById('descargar').onclick = () => descargarCSV(
-    [['Estudiante', ...COLS, 'Nivel', 'Probabilidad Alta', 'Prioridad de mejora', 'Observacion'],
-     ...LOTE.map(f => [f.estudiante, ...VARS.map(v => f.valores[v] ?? ''),
-       f.errores.length ? 'Error' : f.nivel, f.errores.length ? '' : f.prob_alta,
-       f.errores.length ? f.errores.join(' ') : f.prioridad, f.errores.length || f.coincide ? '' : 'Cerca de un limite entre niveles'])],
-    'resultados_competitividad.csv');
-}
 if (RES) {
   const svg = document.getElementById('radar'), cx = 180, cy = 165, R = 115, n = VARS.length;
   const punto = (i, f) => { const a = -Math.PI / 2 + i * 2 * Math.PI / n; return [cx + R * f * Math.cos(a), cy + R * f * Math.sin(a)]; };

@@ -143,10 +143,8 @@ def test_descarga_de_plantilla(cliente):
 def test_carga_de_la_plantilla_en_excel(cliente):
     plantilla = cliente.get('/plantilla.xlsx').data
     r = subir(cliente, plantilla, 'plantilla.xlsx')
-    html = r.get_data(as_text=True)
     assert r.status_code == 200
-    assert 'Estudiante 2' in html
-    assert 'Con errores: <b>0</b>' in html
+    assert 'Competitividad' in r.get_data(as_text=True)
 
 
 def test_carga_de_csv_con_columnas_en_espanol(cliente):
@@ -157,11 +155,12 @@ def test_carga_de_csv_con_columnas_en_espanol(cliente):
     assert 'Ana' in r.get_data(as_text=True)
 
 
-def test_carga_marca_las_filas_con_datos_invalidos(cliente):
+def test_carga_rechaza_archivo_con_varios_alumnos(cliente):
     csv = ('Estudiante,GPA,Programming_Skill,Communication_Skill,Teamwork,Internship_Count,Industry_Exposure\n'
-           'Ana,7.5,5,5,5,2,5\nLuis,15,5,5,5,2,5\n').encode('utf-8')
-    html = subir(cliente, csv, 'notas.csv').get_data(as_text=True)
-    assert 'Con errores: <b>1</b>' in html
+           'Ana,7.5,5,5,5,2,5\nLuis,8,5,5,5,2,5\n').encode('utf-8')
+    r = subir(cliente, csv, 'notas.csv')
+    assert r.status_code == 400
+    assert 'un solo alumno' in r.get_data(as_text=True)
 
 
 def test_carga_rechaza_archivo_sin_columnas_requeridas(cliente):
@@ -191,7 +190,16 @@ def test_archivo_de_un_alumno_muestra_resultado_completo(cliente):
 
 def test_subir_archivo_desde_evaluar_estudiante(cliente):
     csv = 'GPA,Programming_Skill,Communication_Skill,Teamwork,Internship_Count,Industry_Exposure\n15,8,8,8,3,8\n'
-    r = cliente.post('/cargar', data={'archivo': (io.BytesIO(csv.encode()), 'alumno.csv'), 'desde': 'evaluar'},
+    r = cliente.post('/cargar', data={'archivo': (io.BytesIO(csv.encode()), 'alumno.csv')},
                      content_type='multipart/form-data')
     assert r.status_code == 400
     assert 'el valor debe estar entre' in r.get_data(as_text=True)
+
+
+def test_resultado_incluye_empresas_con_enlace_para_enviar_cv(cliente):
+    r = cliente.post('/predecir', data={'GPA': 9.2, 'Programming_Skill': 8, 'Communication_Skill': 8,
+                                        'Teamwork': 8, 'Internship_Count': 3, 'Industry_Exposure': 8})
+    html = r.get_data(as_text=True)
+    assert 'Empresas que podrían interesarte' in html
+    assert html.count('Enviar mi CV') == 4
+    assert 'mailto:' in html
